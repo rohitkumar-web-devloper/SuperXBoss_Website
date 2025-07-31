@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const Navbar = () => {
     const pathname = usePathname();
-    const hiddenPaths = ["/login", "/login/user_information"];
+    const hiddenPaths = ["/login", "/register"];
     const isVisible = !hiddenPaths.includes(pathname);
 
     if (!isVisible) return null;

@@ -29,7 +29,7 @@ const languages: LanguageOption[] = [
   { value: "tamil", label: "Tamil" },
 ];
 
-export const UserInformationForm = () => {
+export const CustomerDetailForm = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -105,7 +105,7 @@ export const UserInformationForm = () => {
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-semibold text-gray-800 mb-1">User Information</h1>
+        <h1 className="text-xl font-semibold text-gray-800 mb-1">Customer Detail</h1>
         <p className="text-gray-500 text-sm">Please fill in your details</p>
       </div>
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { QueryProvider } from "@/contexts/QueryProvider";
+import { AuthProvider } from "@/contexts/AuthProvider";
 
 
 
@@ -23,9 +24,12 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${outfit.className} antialiased text-gray-700`}>
                 <QueryProvider>
-                    <Navbar />
-                    {children}
-                    <Footer />
+                    <AuthProvider>
+                        <Navbar />
+                        {children}
+                        <Footer />
+                    </AuthProvider>
+
                 </QueryProvider>
             </body>
         </html>
