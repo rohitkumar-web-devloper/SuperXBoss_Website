@@ -1,18 +1,19 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthProvider";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/Button';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthProvider';
 
 const COUNTDOWN_DURATION = 30;
 
 export const LoginForm = () => {
-    const [phone, setPhone] = useState("");
-    const [otp, setOtp] = useState("");
+    const [phone, setPhone] = useState('');
+    const [otp, setOtp] = useState('');
     const [isOtpSent, setIsOtpSent] = useState(false);
     const [countdown, setCountdown] = useState(0);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
 
     const router = useRouter();
     const { loginMutation, verifyOTPMutation } = useAuth();
@@ -20,6 +21,26 @@ export const LoginForm = () => {
     useEffect(() => {
         return () => setCountdown(0);
     }, []);
+
+    useEffect(() => {
+        if (verifyOTPMutation.isSuccess) {
+            const response = verifyOTPMutation.data;
+            const userPayload = response?._payload;
+
+            if (!userPayload) return;
+
+            localStorage.setItem('token', userPayload.token);
+
+            if (!userPayload.type || userPayload.type === '') {
+                // Redirect to details page if no type
+                router.push(`/login/customer_information/${phone}/${userPayload._id}`);
+            } else {
+                // Save user and redirect to home
+                localStorage.setItem('user', JSON.stringify(userPayload));
+                router.push('/');
+            }
+        }
+    }, [verifyOTPMutation.isSuccess, verifyOTPMutation.data, router, phone]);
 
     const startCountdown = () => {
         setCountdown(COUNTDOWN_DURATION);
@@ -37,10 +58,10 @@ export const LoginForm = () => {
 
     const handlePhoneSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
+        setError('');
 
         if (!/^[0-9]{10}$/.test(phone)) {
-            setError("Mobile number must be exactly 10 digits.");
+            setError('Mobile number must be exactly 10 digits.');
             return;
         }
 
@@ -50,49 +71,40 @@ export const LoginForm = () => {
                 startCountdown();
             },
             onError: (err) => {
-                setError(err.message);
+                setError(err.message || 'Failed to send OTP');
             },
         });
     };
 
     const handleOtpSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setError("");
+        setError('');
 
         if (!/^[0-9]{4}$/.test(otp)) {
-            setError("OTP must be exactly 4 digits.");
+            setError('OTP must be exactly 4 digits.');
             return;
         }
 
-        verifyOTPMutation.mutate({ phone, otp, });
-        verifyOTPMutation.data.payloadtype
+        verifyOTPMutation.mutate({ phone, otp });
     };
-
-    useEffect(() => {
-        if (verifyOTPMutation.isSuccess) {
-            const response = verifyOTPMutation.data;
-
-            if (response?._payload?.type === "") {
-                router.push(`/login/customer_information/${phone}`);
-            }
-        }
-    }, [verifyOTPMutation.isSuccess, verifyOTPMutation.data, router, phone]);
 
     const resendOtp = () => {
         if (countdown > 0) return;
 
         loginMutation.mutate(phone, {
             onSuccess: () => startCountdown(),
-            onError: (err) => setError(err.message),
+            onError: (err) => setError(err.message || 'Failed to resend OTP'),
         });
     };
 
     return (
         <div className="space-y-4">
             <div className="text-center mb-6">
-                <h1 className="text-xl font-semibold text-gray-800 mb-1">Welcome Back</h1>
+                <h1 className="text-xl font-semibold text-gray-800 mb-1">
+                    {isOtpSent ? 'Verify Your Account' : 'Welcome Back'}
+                </h1>
                 <p className="text-gray-500 text-sm">
-                    {isOtpSent ? "Enter your verification code" : "Sign in with your phone number"}
+                    {isOtpSent ? 'Enter your verification code' : 'Sign in with your phone number'}
                 </p>
             </div>
 
@@ -115,7 +127,12 @@ export const LoginForm = () => {
                         pattern="[0-9]{10}"
                         maxLength={10}
                     />
-                    <Button type="submit" isLoading={loginMutation.isPending} fullWidth>
+                    <Button
+                        type="submit"
+                        isLoading={loginMutation.isPending}
+                        fullWidth
+                        disabled={loginMutation.isPending}
+                    >
                         Send Verification Code
                     </Button>
                 </form>
@@ -135,7 +152,12 @@ export const LoginForm = () => {
                         We've sent a code to +91{phone}
                     </p>
 
-                    <Button type="submit" isLoading={verifyOTPMutation.isPending} fullWidth>
+                    <Button
+                        type="submit"
+                        isLoading={verifyOTPMutation.isPending}
+                        fullWidth
+                        disabled={verifyOTPMutation.isPending}
+                    >
                         Verify
                     </Button>
 
@@ -149,7 +171,7 @@ export const LoginForm = () => {
                                 className="text-[#1B4B66] hover:text-[#143A52] font-medium"
                                 disabled={countdown > 0 || loginMutation.isPending}
                             >
-                                {loginMutation.isPending ? "Sending..." : "Resend Code"}
+                                {loginMutation.isPending ? 'Sending...' : 'Resend Code'}
                             </button>
                         )}
                     </div>

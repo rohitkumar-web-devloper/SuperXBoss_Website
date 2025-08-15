@@ -2,7 +2,6 @@
 import React from 'react';
 import logo from "@assets/logo.svg";
 import login from "@assets/login.svg";
-import detail from "@assets/detail.svg";
 import Image from 'next/image';
 import { LoginForm } from '@/components/auth/LoginForm';
 

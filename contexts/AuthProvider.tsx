@@ -1,70 +1,76 @@
+// contexts/AuthProvider.tsx
 'use client';
 
-import { createContext, useContext } from 'react';
-import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
-import { login as apiLogin,  verifyOTP } from '@/services/apis/customers/customers';
-import { useRouter } from 'next/navigation';
-
-type User = {
-    id: string;
-    name: string;
-    phone: string;
-} | null;
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
+import { login as apiLogin, verifyOTP, updateCustomer } from '@/services/apis/customers/customers';
+import { CustomerPayload } from '@/types/customersTypes';
 
 type AuthContextType = {
-    user: User | null | undefined;
+    user: CustomerPayload | null;
+    setUser: React.Dispatch<React.SetStateAction<CustomerPayload | null>>;
+    isAuthenticated: boolean;
+    isLoading: boolean;
     loginMutation: UseMutationResult<string, Error, string, unknown>;
     verifyOTPMutation: UseMutationResult<any, Error, { phone: string; otp: string }, unknown>;
+    updateCustomerMutation: UseMutationResult<any, Error, FormData, unknown>;
+    logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const queryClient = useQueryClient();
-    const router = useRouter();
+    const [user, setUser] = useState<CustomerPayload | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+        }
+    }, []);
 
-    const { data: user } = useQuery<User>({
-        queryKey: ['auth-user'],
-        initialData: null,
-        staleTime: Infinity,
-        queryFn: async () => {
-            const storedUser = localStorage.getItem('user');
-            return storedUser ? JSON.parse(storedUser) : null;
-        },
-    });
-
-    // Login mutation: send OTP
     const loginMutation = useMutation({
-        mutationFn: async (phone: string) => {
-            const response = await apiLogin({ mobile: phone });
-            if (!response.success) {
-                throw new Error(response.message || 'Failed to send OTP');
-            }
-            return phone;
-        },
-        onSuccess: (phone) => {
-            queryClient.setQueryData(['auth-phone'], phone);
-            queryClient.setQueryData(['auth-otp-sent'], true);
-        },
+        mutationKey: ['send-otp'],
+        mutationFn: async (phone: string) => await apiLogin({ mobile: phone }),
     });
 
-    // Verify OTP mutation
     const verifyOTPMutation = useMutation({
         mutationKey: ['verify-otp'],
-        mutationFn: ({ phone, otp }: { phone: string; otp: string }) =>
-        verifyOTP({ mobile: phone, otp }), 
+        mutationFn: async ({ phone, otp }: { phone: string; otp: string }) => {
+            const data = await verifyOTP({ mobile: phone, otp });
+            localStorage.setItem('token', data._payload.token);
+            setUser(data._payload.user);
+            return data;
+        },
     });
-    const value: AuthContextType = {
-        user,
-        loginMutation,
-        verifyOTPMutation,
+
+    const updateCustomerMutation = useMutation({
+        mutationFn: async (formData: FormData) => {
+            const updatedUser = await updateCustomer(formData);
+            setUser(updatedUser._payload);
+            return updatedUser;
+        },
+    });
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
     };
 
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
+    const value: AuthContextType = {
+        user,
+        setUser,
+        isAuthenticated: !!user,
+        isLoading,
+        loginMutation,
+        verifyOTPMutation,
+        updateCustomerMutation,
+        logout,
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {

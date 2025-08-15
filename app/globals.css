@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-default: #1B4B66;
+  --color-default-100: color-mix(in srgb, var(--color-default), white 70%);
+  --color-default-200: color-mix(in srgb, var(--color-default), white 50%);
+  --color-default-300: color-mix(in srgb, var(--color-default), white 30%);
+  --color-default-400: color-mix(in srgb, var(--color-default), white 15%);
+  --color-default-500: var(--color-default);
+  --color-default-600: color-mix(in srgb, var(--color-default), black 15%);
+  --color-default-700: color-mix(in srgb, var(--color-default), black 30%);
+  --color-default-800: color-mix(in srgb, var(--color-default), black 50%);
+  --color-default-900: color-mix(in srgb, var(--color-default), black 70%);
+}
 
 /* @theme inline {
   --font-oswald: var(--font-oswald);
@@ -12,12 +24,14 @@ body {
  */
 /* styles/globals.css */
 ::-webkit-scrollbar {
-  width: 4px;
+    width: 4px;
 }
+
 ::-webkit-scrollbar-thumb {
-  background-color: #9CA3AF;
-  border-radius: 4px;
+    background-color: #9CA3AF;
+    border-radius: 4px;
 }
+
 ::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
