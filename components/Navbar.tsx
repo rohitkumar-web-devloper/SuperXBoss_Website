@@ -4,9 +4,16 @@ import logo from "../assets/logo.svg";
 import { FiPhone, FiMail, FiMapPin, FiMenu, FiX } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
+
+    // Helper function to determine if link is active
+    const isActive = (path: string) => {
+        return pathname === path;
+    };
 
     return (
         <>
@@ -24,16 +31,28 @@ const Navbar = () => {
 
                 {/* Centered Navigation Links */}
                 <div className="flex items-center justify-center gap-4 lg:gap-8 mx-4">
-                    <Link href="/" className="hover:text-gray-900 transition-colors duration-200">
+                    <Link 
+                        href="/" 
+                        className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/") ? "text-default font-medium" : ""}`}
+                    >
                         Home
                     </Link>
-                    <Link href="/products" className="hover:text-gray-900 transition-colors duration-200">
+                    <Link 
+                        href="/products" 
+                        className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/products") ? "text-default font-medium" : ""}`}
+                    >
                         Products
                     </Link>
-                    <Link href="/contact" className="hover:text-gray-900 transition-colors duration-200">
+                    <Link 
+                        href="/contact" 
+                        className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/contact") ? "text-default font-medium" : ""}`}
+                    >
                         Contact
                     </Link>
-                    <Link href="/about" className="hover:text-gray-900 transition-colors duration-200">
+                    <Link 
+                        href="/about" 
+                        className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/about") ? "text-default font-medium" : ""}`}
+                    >
                         About Us
                     </Link>
                 </div>
@@ -84,28 +103,28 @@ const Navbar = () => {
                 <div className="flex flex-col items-center space-y-6 text-sm">
                     <Link
                         href="/"
-                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
+                        className={`hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b ${isActive("/") ? "text-default font-medium" : ""}`}
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         Home
                     </Link>
                     <Link
                         href="/products"
-                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
+                        className={`hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b ${isActive("/products") ? "text-default font-medium" : ""}`}
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         Products
                     </Link>
                     <Link
                         href="/contact"
-                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
+                        className={`hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b ${isActive("/contact") ? "text-default font-medium" : ""}`}
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         Contact
                     </Link>
                     <Link
                         href="/about"
-                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
+                        className={`hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b ${isActive("/about") ? "text-default font-medium" : ""}`}
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         About Us

@@ -25,6 +25,7 @@ const CategoriesPage = () => {
             return lastPage.pagination.page + 1;
         },
         initialPageParam: 1,
+        staleTime:0
     });
 
     React.useEffect(() => {
