@@ -1,72 +1,46 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
-import { useRouter } from "next/navigation";
+'use client';
 
-
+import React, { useState, useEffect } from 'react';
+import { Input } from '../ui/Input';
+import { Button } from '../ui/Button';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthProvider';
 
 const COUNTDOWN_DURATION = 30;
 
 export const LoginForm = () => {
-    const [phone, setPhone] = useState("");
-    const [otp, setOtp] = useState("");
+    const [phone, setPhone] = useState('');
+    const [otp, setOtp] = useState('');
     const [isOtpSent, setIsOtpSent] = useState(false);
     const [countdown, setCountdown] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
+
     const router = useRouter();
+    const { loginMutation, verifyOTPMutation } = useAuth();
 
     useEffect(() => {
-        // Clean up timer when component unmounts
-        return () => {
-            setCountdown(0);
-        };
+        return () => setCountdown(0);
     }, []);
 
-    const handlePhoneSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setIsLoading(true);
+    useEffect(() => {
+        if (verifyOTPMutation.isSuccess) {
+            const response = verifyOTPMutation.data;
+            const userPayload = response?._payload;
 
-        try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
+            if (!userPayload) return;
 
-            if (!/^[0-9]{10}$/.test(phone)) {
-                throw new Error("Please enter a valid 10-digit phone number");
+            localStorage.setItem('token', userPayload.token);
+
+            if (!userPayload.type || userPayload.type === '') {
+                // Redirect to details page if no type
+                router.push(`/login/customer_information/${phone}/${userPayload._id}`);
+            } else {
+                // Save user and redirect to home
+                localStorage.setItem('user', JSON.stringify(userPayload));
+                router.push('/');
             }
-
-            setIsOtpSent(true);
-            startCountdown();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to send OTP");
-        } finally {
-            setIsLoading(false);
         }
-    };
-
-    const handleOtpSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setIsLoading(true);
-
-        try {
-            // Simulate verification
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            if (!/^[0-9]{6}$/.test(otp)) {
-                throw new Error("Please enter a valid 6-digit OTP");
-            }
-
-            // On successful login
-            router.push("/login/user_information");
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to verify OTP");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [verifyOTPMutation.isSuccess, verifyOTPMutation.data, router, phone]);
 
     const startCountdown = () => {
         setCountdown(COUNTDOWN_DURATION);
@@ -79,22 +53,58 @@ export const LoginForm = () => {
                 return prev - 1;
             });
         }, 1000);
-
         return () => clearInterval(timer);
+    };
+
+    const handlePhoneSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            setError('Mobile number must be exactly 10 digits.');
+            return;
+        }
+
+        loginMutation.mutate(phone, {
+            onSuccess: () => {
+                setIsOtpSent(true);
+                startCountdown();
+            },
+            onError: (err) => {
+                setError(err.message || 'Failed to send OTP');
+            },
+        });
+    };
+
+    const handleOtpSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        if (!/^[0-9]{4}$/.test(otp)) {
+            setError('OTP must be exactly 4 digits.');
+            return;
+        }
+
+        verifyOTPMutation.mutate({ phone, otp });
     };
 
     const resendOtp = () => {
         if (countdown > 0) return;
-        startCountdown();
-        // In a real app, you would call your API to resend OTP here
+
+        loginMutation.mutate(phone, {
+            onSuccess: () => startCountdown(),
+            onError: (err) => setError(err.message || 'Failed to resend OTP'),
+        });
     };
 
     return (
         <div className="space-y-4">
             <div className="text-center mb-6">
-                <h1 className="text-xl font-semibold text-gray-800 mb-1">Welcome Back</h1>
+                <h1 className="text-xl font-semibold text-gray-800 mb-1">
+                    {isOtpSent ? 'Verify Your Account' : 'Welcome Back'}
+                </h1>
                 <p className="text-gray-500 text-sm">
-                    {isOtpSent ? "Enter your verification code" : "Sign in with your phone number"}
+                    {isOtpSent ? 'Enter your verification code' : 'Sign in with your phone number'}
                 </p>
             </div>
 
@@ -117,8 +127,12 @@ export const LoginForm = () => {
                         pattern="[0-9]{10}"
                         maxLength={10}
                     />
-
-                    <Button type="submit" isLoading={isLoading} fullWidth>
+                    <Button
+                        type="submit"
+                        isLoading={loginMutation.isPending}
+                        fullWidth
+                        disabled={loginMutation.isPending}
+                    >
                         Send Verification Code
                     </Button>
                 </form>
@@ -129,17 +143,21 @@ export const LoginForm = () => {
                         type="text"
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
-                        placeholder="Enter 6-digit code"
+                        placeholder="Enter 4-digit code"
                         required
-                        pattern="[0-9]{6}"
-                        maxLength={6}
+                        pattern="[0-9]{4}"
+                        maxLength={4}
                     />
-
                     <p className="text-xs text-gray-500">
                         We've sent a code to +91{phone}
                     </p>
 
-                    <Button type="submit" isLoading={isLoading} fullWidth>
+                    <Button
+                        type="submit"
+                        isLoading={verifyOTPMutation.isPending}
+                        fullWidth
+                        disabled={verifyOTPMutation.isPending}
+                    >
                         Verify
                     </Button>
 
@@ -151,9 +169,9 @@ export const LoginForm = () => {
                                 type="button"
                                 onClick={resendOtp}
                                 className="text-[#1B4B66] hover:text-[#143A52] font-medium"
-                                disabled={countdown > 0}
+                                disabled={countdown > 0 || loginMutation.isPending}
                             >
-                                Resend Code
+                                {loginMutation.isPending ? 'Sending...' : 'Resend Code'}
                             </button>
                         )}
                     </div>

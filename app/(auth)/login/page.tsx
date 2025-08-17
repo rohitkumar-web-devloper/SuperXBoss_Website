@@ -2,11 +2,10 @@
 import React from 'react';
 import logo from "@assets/logo.svg";
 import login from "@assets/login.svg";
-import detail from "@assets/detail.svg";
 import Image from 'next/image';
 import { LoginForm } from '@/components/auth/LoginForm';
 
-const LoginUser = () => {
+const LoginCustomer = () => {
     return (
         <div className="min-h-screen bg-white  flex items-center justify-center p-4">
             <div className="w-full max-w-4xl bg-white sm:rounded sm:border border-gray-200 sm:shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-2">
@@ -49,4 +48,4 @@ const LoginUser = () => {
     );
 };
 
-export default LoginUser;
+export default LoginCustomer;
