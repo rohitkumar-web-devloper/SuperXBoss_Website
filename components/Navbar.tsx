@@ -11,7 +11,7 @@ const Navbar = () => {
     return (
         <>
             {/* Desktop Navbar */}
-            <nav className="hidden md:flex items-center justify-between px-6 md:px-16 py-3 border-b border-gray-300 text-gray-700 bg-white">
+            <nav className="hidden md:flex items-center justify-between px-6 xl:px-16 py-3 border-b border-gray-300 text-gray-700 bg-white">
                 <Link href="/" className="flex-shrink-0">
                     <Image
                         className="cursor-pointer w-28 md:w-32"

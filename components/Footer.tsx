@@ -4,11 +4,17 @@ import logo from "../assets/logo.svg";
 import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+    const pathname = usePathname();
+
+    // Hide footer only on /products page
+    if (pathname === "/products") return null;
+
     return (
         <footer className="bg-white">
-            <div className="flex flex-col md:flex-row items-start justify-between px-6 md:px-16 gap-10 py-14 border-y border-gray-300 text-gray-600">
+            <div className="flex flex-col md:flex-row items-start justify-between px-6 xl:px-16 gap-10 py-14 border-y border-gray-300 text-gray-600">
                 <div className="w-full md:w-2/5">
                     <Image
                         className="w-28 md:w-32"
@@ -54,6 +60,7 @@ const Footer = () => {
                         </li>
                     </ul>
                 </div>
+
                 <div className="w-full md:w-1/4">
                     <h2 className="font-medium text-gray-900 mb-5 text-lg">Contact Us</h2>
                     <div className="text-sm space-y-4">
@@ -85,9 +92,9 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+
             <div className="py-6 text-center text-xs md:text-sm text-gray-500">
                 <p>Copyright © {new Date().getFullYear()} TechShop. All Rights Reserved.</p>
-                {/* <p className="mt-1">Designed with ❤️ by Rohit Team</p> */}
             </div>
         </footer>
     );

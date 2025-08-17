@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/contexts/QueryProvider";
-import { AuthProvider } from "@/contexts/AuthProvider";
-
 
 
 const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
@@ -16,11 +14,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en">
-            <body className={`${outfit.className} antialiased text-gray-700`}>
+            <body   cz-shortcut-listen="true" className={`${outfit.className} antialiased text-gray-700`}>
                 <QueryProvider>
-                    <AuthProvider>
                         {children}
-                    </AuthProvider>
                 </QueryProvider>
             </body>
         </html>

@@ -1,27 +1,29 @@
+"use client"
 "use client";
 
 import { useNoAuthCategoriesQuery } from "@/services/apis/publicApis/hooks";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import TopCategoriesSkeleton from "../skeletons/home/TopCategoriesSkeleton";
 
 const TopCategories = () => {
-    const { data, isLoading } = useNoAuthCategoriesQuery();
-    const router = useRouter();
-    const categories = data?._payload?.slice(0, 5) || [];
-    if (isLoading) {
-        return <TopCategoriesSkeleton />
-    }
+    const { data, isLoading, isError } = useNoAuthCategoriesQuery();
+
+    // Safely access the categories array with optional chaining
+    const categories = data?._payload || [];
+
     return (
-        <section className="py-12  md:px-8 max-w-7xl mx-auto">
+        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
             <div className="text-center mb-10">
-                <h2 className="text-xl md:text-2xl font-bold mb-2">Shop by Category</h2>
+                <h2 className=" text-xl md:text-2xl font-bold mb-2">Shop by Category</h2>
                 <p className="text-gray-600">Discover our most popular collections</p>
             </div>
 
-            {categories.length > 0 ? (
+            {isLoading ? (
+                <div className="text-center">Loading categories...</div>
+            ) : isError ? (
+                <div className="text-center text-red-500">Error loading categories</div>
+            ) : categories.length > 0 ? (
                 <>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
                         {categories.map((category: any) => (
                             <div
                                 key={category._id}
@@ -41,14 +43,13 @@ const TopCategories = () => {
                                 <h3 className="font-medium text-[#1B4B66] text-center text-sm">
                                     {category.name}
                                 </h3>
+                                {category.description && (
+                                    <p className="text-xs text-gray-500 mt-2 text-center line-clamp-2">
+                                        {category.description}
+                                    </p>
+                                )}
                             </div>
                         ))}
-                    </div>
-
-                    <div className="text-center mt-8">
-                        <button onClick={() => { router.push("/categories") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-                            Browse All
-                        </button>
                     </div>
                 </>
             ) : (
