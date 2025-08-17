@@ -27,14 +27,14 @@ const Navbar = () => {
                     <Link href="/" className="hover:text-gray-900 transition-colors duration-200">
                         Home
                     </Link>
+                    <Link href="/products" className="hover:text-gray-900 transition-colors duration-200">
+                        Products
+                    </Link>
                     <Link href="/contact" className="hover:text-gray-900 transition-colors duration-200">
                         Contact
                     </Link>
                     <Link href="/about" className="hover:text-gray-900 transition-colors duration-200">
                         About Us
-                    </Link>
-                    <Link href="/terms" className="hover:text-gray-900 transition-colors duration-200">
-                        Terms
                     </Link>
                 </div>
 
@@ -90,6 +90,13 @@ const Navbar = () => {
                         Home
                     </Link>
                     <Link
+                        href="/products"
+                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        Products
+                    </Link>
+                    <Link
                         href="/contact"
                         className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
                         onClick={() => setMobileMenuOpen(false)}
@@ -102,13 +109,6 @@ const Navbar = () => {
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         About Us
-                    </Link>
-                    <Link
-                        href="/terms"
-                        className="hover:text-gray-900 transition-colors duration-200 py-2 w-full text-center border-b"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Terms
                     </Link>
                 </div>
 

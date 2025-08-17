@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { useNoAuthProductsQuery } from "@/services/apis/publicApis/hooks";
 import HeaderSliderSkeleton from "../skeletons/home/HeaderSliderSkeleton";
 
 interface Product {
@@ -17,13 +16,7 @@ interface Product {
     };
 }
 
-const HeaderSlider = () => {
-    const { data, isLoading } = useNoAuthProductsQuery({
-        new_arrival: true,
-        page: 1,
-        limit: 10,
-    });
-
+const   HeaderSlider = ({ data, isLoading }: any) => {
     const sliderData = (data?._payload as Product[])?.slice(0, 4) || [];
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
@@ -81,7 +74,7 @@ const HeaderSlider = () => {
                 {sliderData.map((slide, index) => (
                     <div
                         key={slide._id}
-                        className="flex flex-col-reverse md:flex-row items-center sm:shadow sm:border border-gray-200 justify-between sm:py-8 md:px-14 sm:px-5 mt-6 rounded min-w-full relative"
+                        className="flex flex-col-reverse md:flex-row items-center sm:shadow sm:border border-gray-200 justify-between sm:py-8 px-4 md:px-14 sm:px-5 mt-6 rounded min-w-full relative"
                     >
                         {slide.discount_customer_price < slide.customer_price && (
                             <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">

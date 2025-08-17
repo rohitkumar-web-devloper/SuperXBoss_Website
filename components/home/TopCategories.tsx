@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import TopCategoriesSkeleton from "../skeletons/home/TopCategoriesSkeleton";
 
 const TopCategories = () => {
-    const { data, isLoading } = useNoAuthCategoriesQuery();
+    const { data, isLoading } = useNoAuthCategoriesQuery({page:1, limit: 5});
     const router = useRouter();
-    const categories = data?._payload?.slice(0, 5) || [];
+    const categories = (data as any)?._payload?.slice(0, 5) || [];
     if (isLoading) {
         return <TopCategoriesSkeleton />
     }
@@ -21,7 +21,7 @@ const TopCategories = () => {
 
             {categories.length > 0 ? (
                 <>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {categories.map((category: any) => (
                             <div
                                 key={category._id}
@@ -45,7 +45,7 @@ const TopCategories = () => {
                         ))}
                     </div>
 
-                    <div className="text-center mt-8">
+                    <div className="text-center mt-8 w-full">
                         <button onClick={() => { router.push("/categories") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                             Browse All
                         </button>

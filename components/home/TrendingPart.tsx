@@ -3,8 +3,10 @@ import React from 'react';
 import ProductCard from '../ProductCard';
 import { useNoAuthProductsQuery } from '@/services/apis/publicApis/hooks';
 import TrendingPartSkeleton from '../skeletons/home/TrendingPartSkeleton';
+import { useRouter } from 'next/navigation';
 
 const TrendingPart = () => {
+    const router = useRouter();
     const { data, isLoading, isError } = useNoAuthProductsQuery({
         trend_part: true,
         page: 1,
@@ -37,7 +39,7 @@ const TrendingPart = () => {
                             />
                         ))}
                     </div>
-                    <button className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
+                    <button onClick={()=>router.push("/products")} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                         See more
                     </button>
                 </>

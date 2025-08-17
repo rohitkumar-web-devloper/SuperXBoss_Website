@@ -10,7 +10,7 @@ const Footer = () => {
     const pathname = usePathname();
 
     // Hide footer only on /products page
-    if (pathname === "/products") return null;
+    if (pathname === "/products" || pathname === "/brands") return null;
 
     return (
         <footer className="bg-white">

@@ -3,12 +3,7 @@ import Image from "next/image";
 import NewArrivalsSkeleton from "../skeletons/home/NewArrivalsSkeleton";
 import { useNoAuthProductsQuery } from "@/services/apis/publicApis/hooks";
 import defa from "@assets/cannon_camera_image.png"
-const NewArrivals = () => {
-    const { data, isLoading, isError } = useNoAuthProductsQuery({
-        new_arrival: true,
-        page: 1,
-        limit: 10
-    });
+const NewArrivals = ({ data, isLoading }: any) => {
 
     const products = data?._payload.slice(0, 8) || [];
     if (isLoading) {
@@ -21,10 +16,10 @@ const NewArrivals = () => {
                 <p className="text-3xl font-medium">New Arrivals</p>
                 <div className="w-28 h-0.5 bg-default mt-2"></div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-14 mt-12 md:px-14 px-4 inset-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 lg:gap-14 mt-12  inset-0">
                 {products.map(({ images, name, description }: any, i: number) => (
                     <div key={i} className="relative group shadow h-72 md:h-80 w-full border border-gray-100">
-                         <Image
+                        <Image
                             src={images?.[0] || defa}
                             fill
                             alt={name}

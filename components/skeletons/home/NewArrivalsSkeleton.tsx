@@ -12,7 +12,7 @@ const NewArrivalsSkeleton = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-14 mt-12 md:px-14 px-4 inset-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4gap-8 lg:gap-14 mt-12  inset-0">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="relative group shadow h-64 bg-gray-200 animate-pulse rounded overflow-hidden">
             {/* Image Placeholder */}
