@@ -3,7 +3,7 @@ import React from 'react';
 import logo from "@assets/logo.svg";
 import login from "@assets/login.svg";
 import Image from 'next/image';
-import { LoginForm } from '@/components/auth/LoginForm';
+// import { LoginForm } from '@/components/auth/LoginForm';
 
 const LoginCustomer = () => {
     return (
@@ -30,9 +30,9 @@ const LoginCustomer = () => {
                             </div>
                         </div>
 
-                        <div className="px-6 pb-6">
+                        {/* <div className="px-6 pb-6">
                             <LoginForm />
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="bg-gray-50 px-6 py-4 text-center border-t border-gray-200">

@@ -45,7 +45,7 @@ export const CustomerDetailForm = () => {
     const params = useParams();
     const info = params?.info as string[] | undefined;
 
-    const phone = info?.[0];
+    // const phone = info?.[0];
     const customerId = info?.[1];
 
     const [formData, setFormData] = useState({
