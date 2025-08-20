@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import NewArrivalsSkeleton from "../skeletons/home/NewArrivalsSkeleton";
-import { useNoAuthProductsQuery } from "@/services/apis/publicApis/hooks";
 import defa from "@assets/cannon_camera_image.png"
 const NewArrivals = ({ data, isLoading }: any) => {
 

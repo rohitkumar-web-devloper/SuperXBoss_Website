@@ -12,7 +12,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-    id,
     name,
     price,
     originalPrice,

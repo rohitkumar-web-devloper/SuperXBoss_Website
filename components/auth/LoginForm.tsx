@@ -1,182 +1,182 @@
-'use client';
+// 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthProvider';
+// import React, { useState, useEffect } from 'react';
+// import { Input } from '../ui/Input';
+// import { Button } from '../ui/Button';
+// import { useRouter } from 'next/navigation';
+// import { useAuth } from '@/contexts/AuthProvider';
 
-const COUNTDOWN_DURATION = 30;
+// const COUNTDOWN_DURATION = 30;
 
-export const LoginForm = () => {
-    const [phone, setPhone] = useState('');
-    const [otp, setOtp] = useState('');
-    const [isOtpSent, setIsOtpSent] = useState(false);
-    const [countdown, setCountdown] = useState(0);
-    const [error, setError] = useState('');
+// export const LoginForm = () => {
+//     const [phone, setPhone] = useState('');
+//     const [otp, setOtp] = useState('');
+//     const [isOtpSent, setIsOtpSent] = useState(false);
+//     const [countdown, setCountdown] = useState(0);
+//     const [error, setError] = useState('');
 
-    const router = useRouter();
-    const { loginMutation, verifyOTPMutation } = useAuth();
+//     const router = useRouter();
+//     const { loginMutation, verifyOTPMutation } = useAuth();
 
-    useEffect(() => {
-        return () => setCountdown(0);
-    }, []);
+//     useEffect(() => {
+//         return () => setCountdown(0);
+//     }, []);
 
-    useEffect(() => {
-        if (verifyOTPMutation.isSuccess) {
-            const response = verifyOTPMutation.data;
-            const userPayload = response?._payload;
+//     useEffect(() => {
+//         if (verifyOTPMutation.isSuccess) {
+//             const response = verifyOTPMutation.data;
+//             const userPayload = response?._payload;
 
-            if (!userPayload) return;
+//             if (!userPayload) return;
 
-            localStorage.setItem('token', userPayload.token);
+//             localStorage.setItem('token', userPayload.token);
 
-            if (!userPayload.type || userPayload.type === '') {
-                // Redirect to details page if no type
-                router.push(`/login/customer_information/${phone}/${userPayload._id}`);
-            } else {
-                // Save user and redirect to home
-                localStorage.setItem('user', JSON.stringify(userPayload));
-                router.push('/');
-            }
-        }
-    }, [verifyOTPMutation.isSuccess, verifyOTPMutation.data, router, phone]);
+//             if (!userPayload.type || userPayload.type === '') {
+//                 // Redirect to details page if no type
+//                 router.push(`/login/customer_information/${phone}/${userPayload._id}`);
+//             } else {
+//                 // Save user and redirect to home
+//                 localStorage.setItem('user', JSON.stringify(userPayload));
+//                 router.push('/');
+//             }
+//         }
+//     }, [verifyOTPMutation.isSuccess, verifyOTPMutation.data, router, phone]);
 
-    const startCountdown = () => {
-        setCountdown(COUNTDOWN_DURATION);
-        const timer = setInterval(() => {
-            setCountdown((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-        return () => clearInterval(timer);
-    };
+//     const startCountdown = () => {
+//         setCountdown(COUNTDOWN_DURATION);
+//         const timer = setInterval(() => {
+//             setCountdown((prev) => {
+//                 if (prev <= 1) {
+//                     clearInterval(timer);
+//                     return 0;
+//                 }
+//                 return prev - 1;
+//             });
+//         }, 1000);
+//         return () => clearInterval(timer);
+//     };
 
-    const handlePhoneSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
+//     const handlePhoneSubmit = (e: React.FormEvent) => {
+//         e.preventDefault();
+//         setError('');
 
-        if (!/^[0-9]{10}$/.test(phone)) {
-            setError('Mobile number must be exactly 10 digits.');
-            return;
-        }
+//         if (!/^[0-9]{10}$/.test(phone)) {
+//             setError('Mobile number must be exactly 10 digits.');
+//             return;
+//         }
 
-        loginMutation.mutate(phone, {
-            onSuccess: () => {
-                setIsOtpSent(true);
-                startCountdown();
-            },
-            onError: (err) => {
-                setError(err.message || 'Failed to send OTP');
-            },
-        });
-    };
+//         loginMutation.mutate(phone, {
+//             onSuccess: () => {
+//                 setIsOtpSent(true);
+//                 startCountdown();
+//             },
+//             onError: (err) => {
+//                 setError(err.message || 'Failed to send OTP');
+//             },
+//         });
+//     };
 
-    const handleOtpSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
+//     const handleOtpSubmit = (e: React.FormEvent) => {
+//         e.preventDefault();
+//         setError('');
 
-        if (!/^[0-9]{4}$/.test(otp)) {
-            setError('OTP must be exactly 4 digits.');
-            return;
-        }
+//         if (!/^[0-9]{4}$/.test(otp)) {
+//             setError('OTP must be exactly 4 digits.');
+//             return;
+//         }
 
-        verifyOTPMutation.mutate({ phone, otp });
-    };
+//         verifyOTPMutation.mutate({ phone, otp });
+//     };
 
-    const resendOtp = () => {
-        if (countdown > 0) return;
+//     const resendOtp = () => {
+//         if (countdown > 0) return;
 
-        loginMutation.mutate(phone, {
-            onSuccess: () => startCountdown(),
-            onError: (err) => setError(err.message || 'Failed to resend OTP'),
-        });
-    };
+//         loginMutation.mutate(phone, {
+//             onSuccess: () => startCountdown(),
+//             onError: (err) => setError(err.message || 'Failed to resend OTP'),
+//         });
+//     };
 
-    return (
-        <div className="space-y-4">
-            <div className="text-center mb-6">
-                <h1 className="text-xl font-semibold text-gray-800 mb-1">
-                    {isOtpSent ? 'Verify Your Account' : 'Welcome Back'}
-                </h1>
-                <p className="text-gray-500 text-sm">
-                    {isOtpSent ? 'Enter your verification code' : 'Sign in with your phone number'}
-                </p>
-            </div>
+//     return (
+//         <div className="space-y-4">
+//             <div className="text-center mb-6">
+//                 <h1 className="text-xl font-semibold text-gray-800 mb-1">
+//                     {isOtpSent ? 'Verify Your Account' : 'Welcome Back'}
+//                 </h1>
+//                 <p className="text-gray-500 text-sm">
+//                     {isOtpSent ? 'Enter your verification code' : 'Sign in with your phone number'}
+//                 </p>
+//             </div>
 
-            {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
-                    {error}
-                </div>
-            )}
+//             {error && (
+//                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+//                     {error}
+//                 </div>
+//             )}
 
-            {!isOtpSent ? (
-                <form onSubmit={handlePhoneSubmit} className="space-y-4">
-                    <Input
-                        label="Phone Number"
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="00000 00000"
-                        required
-                        leftIcon={<span className="text-gray-500">+91</span>}
-                        pattern="[0-9]{10}"
-                        maxLength={10}
-                    />
-                    <Button
-                        type="submit"
-                        isLoading={loginMutation.isPending}
-                        fullWidth
-                        disabled={loginMutation.isPending}
-                    >
-                        Send Verification Code
-                    </Button>
-                </form>
-            ) : (
-                <form onSubmit={handleOtpSubmit} className="space-y-4">
-                    <Input
-                        label="Verification Code"
-                        type="text"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        placeholder="Enter 4-digit code"
-                        required
-                        pattern="[0-9]{4}"
-                        maxLength={4}
-                    />
-                    <p className="text-xs text-gray-500">
-                        We've sent a code to +91{phone}
-                    </p>
+//             {!isOtpSent ? (
+//                 <form onSubmit={handlePhoneSubmit} className="space-y-4">
+//                     <Input
+//                         label="Phone Number"
+//                         type="tel"
+//                         value={phone}
+//                         onChange={(e) => setPhone(e.target.value)}
+//                         placeholder="00000 00000"
+//                         required
+//                         leftIcon={<span className="text-gray-500">+91</span>}
+//                         pattern="[0-9]{10}"
+//                         maxLength={10}
+//                     />
+//                     <Button
+//                         type="submit"
+//                         isLoading={loginMutation.isPending}
+//                         fullWidth
+//                         disabled={loginMutation.isPending}
+//                     >
+//                         Send Verification Code
+//                     </Button>
+//                 </form>
+//             ) : (
+//                 <form onSubmit={handleOtpSubmit} className="space-y-4">
+//                     <Input
+//                         label="Verification Code"
+//                         type="text"
+//                         value={otp}
+//                         onChange={(e) => setOtp(e.target.value)}
+//                         placeholder="Enter 4-digit code"
+//                         required
+//                         pattern="[0-9]{4}"
+//                         maxLength={4}
+//                     />
+//                     <p className="text-xs text-gray-500">
+//                         We've sent a code to +91{phone}
+//                     </p>
 
-                    <Button
-                        type="submit"
-                        isLoading={verifyOTPMutation.isPending}
-                        fullWidth
-                        disabled={verifyOTPMutation.isPending}
-                    >
-                        Verify
-                    </Button>
+//                     <Button
+//                         type="submit"
+//                         isLoading={verifyOTPMutation.isPending}
+//                         fullWidth
+//                         disabled={verifyOTPMutation.isPending}
+//                     >
+//                         Verify
+//                     </Button>
 
-                    <div className="text-center text-xs">
-                        {countdown > 0 ? (
-                            <span className="text-gray-500">Resend code in {countdown}s</span>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={resendOtp}
-                                className="text-[#1B4B66] hover:text-[#143A52] font-medium"
-                                disabled={countdown > 0 || loginMutation.isPending}
-                            >
-                                {loginMutation.isPending ? 'Sending...' : 'Resend Code'}
-                            </button>
-                        )}
-                    </div>
-                </form>
-            )}
-        </div>
-    );
-};
+//                     <div className="text-center text-xs">
+//                         {countdown > 0 ? (
+//                             <span className="text-gray-500">Resend code in {countdown}s</span>
+//                         ) : (
+//                             <button
+//                                 type="button"
+//                                 onClick={resendOtp}
+//                                 className="text-[#1B4B66] hover:text-[#143A52] font-medium"
+//                                 disabled={countdown > 0 || loginMutation.isPending}
+//                             >
+//                                 {loginMutation.isPending ? 'Sending...' : 'Resend Code'}
+//                             </button>
+//                         )}
+//                     </div>
+//                 </form>
+//             )}
+//         </div>
+//     );
+// };
