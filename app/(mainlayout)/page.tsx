@@ -17,11 +17,11 @@ const Home = () => {
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto ">
             <HeaderSlider data={data} isLoading={isLoading} />
+            <Brands />
             <TopCategories />
             <TrendingPart />
-            <Brands/>
             <NewArrivals data={data} isLoading={isLoading} />
-            <NewsLetter />
+            {/* <NewsLetter /> */}
         </div>
     )
 }

@@ -6,11 +6,12 @@ import { getNoAuthProducts } from '@/services/apis/publicApis/publicApis';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/Button';
 import ProductsSkeleton from '@/components/skeletons/ProductsSkeleton';
+import { useRouter } from 'next/navigation';
 
 
 const ProductsPage = () => {
     const limit = 10;
-
+    const router = useRouter();
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
         queryKey: ['products'],
         queryFn: ({ pageParam = 1 }) =>
@@ -25,7 +26,7 @@ const ProductsPage = () => {
             return lastPage.pagination.page + 1;
         },
         initialPageParam: 1,
-        staleTime:0
+        staleTime: 0
     });
 
     React.useEffect(() => {
@@ -52,6 +53,11 @@ const ProductsPage = () => {
         return <div className="text-center py-10">Error loading products</div>;
     }
 
+    const handleNavigate = (product: any) => {
+        const query = encodeURIComponent(JSON.stringify(product));
+        router.push(`/products/detail?data=${query}`);
+    };
+
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto py-8">
             <h1 className="text-xl md:text-2xl font-bold mb-8">All Products</h1>
@@ -68,6 +74,12 @@ const ProductsPage = () => {
                                 originalPrice={product.customer_price}
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
+                                handleNavigate={() => {
+                                    // Your navigation logic here
+                                    const query = encodeURIComponent(JSON.stringify(product));
+                                    router.push(`/products/detail?data=${query}`);
+                                }}
+
                             />
                         ))}
                     </React.Fragment>
