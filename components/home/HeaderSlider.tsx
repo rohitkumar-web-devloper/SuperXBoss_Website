@@ -113,9 +113,9 @@ const   HeaderSlider = ({ data, isLoading }: any) => {
                             <p className="text-gray-600 mb-6 line-clamp-2 text-sm">
                                 {slide.description.replace(/\r\n/g, " ")}
                             </p>
-                            <button className="group flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full">
+                            {/* <button className="group flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full">
                                 View More
-                            </button>
+                            </button> */}
                         </div>
 
                         <div className="flex items-center justify-center flex-1 md:w-1/2">

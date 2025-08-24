@@ -2,13 +2,14 @@
 
 import { useNoAuthCategoriesQuery } from "@/services/apis/publicApis/hooks";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import TopCategoriesSkeleton from "../skeletons/home/TopCategoriesSkeleton";
 
 const TopCategories = () => {
     const { data, isLoading } = useNoAuthCategoriesQuery({page:1, limit: 5});
-    const router = useRouter();
-    const categories = (data as any)?._payload?.slice(0, 5) || [];
+    // const router = useRouter();
+    const categories = (data as any)?._payload || [];
+    // const categories = (data as any)?._payload?.slice(0, 5) || [];
     if (isLoading) {
         return <TopCategoriesSkeleton />
     }
@@ -45,11 +46,11 @@ const TopCategories = () => {
                         ))}
                     </div>
 
-                    <div className="text-center mt-8 w-full">
+                    {/* <div className="text-center mt-8 w-full">
                         <button onClick={() => { router.push("/categories") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                             Browse All
                         </button>
-                    </div>
+                    </div> */}
                 </>
             ) : (
                 <div className="text-center text-gray-500">

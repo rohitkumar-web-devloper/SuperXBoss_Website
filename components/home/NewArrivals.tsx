@@ -10,7 +10,7 @@ const NewArrivals = ({ data, isLoading }: any) => {
     }
 
     return (
-        <section className="mt-14">
+        <section className="mt-14 mb-12">
             <div className="flex flex-col items-center">
                 <p className="text-3xl font-medium">New Arrivals</p>
                 <div className="w-28 h-0.5 bg-default mt-2"></div>
