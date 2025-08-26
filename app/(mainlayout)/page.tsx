@@ -17,8 +17,19 @@ const Home = () => {
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto ">
             <HeaderSlider data={data} isLoading={isLoading} />
-            <Brands />
+            <Brands
+                heading="Top Spare Parts Brands"
+                subheading="Best spare parts brands for your needs"
+                type="Spare Parts"
+            />
             <TopCategories />
+
+            <Brands
+                heading="Top Vehicle Brands"
+                subheading="Most popular vehicles this week"
+                type="Vehicle"
+            />
+
             <TrendingPart />
             <NewArrivals data={data} isLoading={isLoading} />
             {/* <NewsLetter /> */}

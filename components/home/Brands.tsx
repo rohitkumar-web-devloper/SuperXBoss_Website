@@ -4,8 +4,13 @@ import { useNoAuthBrandsQuery } from "@/services/apis/publicApis/hooks";
 
 import { useRouter } from "next/navigation";
 
-const Brands = () => {
-    const { data, isLoading, isError } = useNoAuthBrandsQuery();
+type SectionProps = {
+    heading: string;
+    subheading?: string;
+    type?: "Vehicle" | "Spare Parts";
+};
+const Brands = ({ heading, subheading, type }: SectionProps) => {
+    const { data, isLoading, isError } = useNoAuthBrandsQuery({ type: type });
     const router = useRouter()
     if (isLoading) {
         return (
@@ -25,16 +30,16 @@ const Brands = () => {
 
     return (
         <section className="py-12  md:px-8 max-w-7xl mx-auto">
-                <div className="text-center mb-10">
-                <h2 className="text-xl md:text-2xl font-bold mb-2">Our Brands</h2>
-                <p className="text-gray-600">Explore our featured partners</p>
+            <div className="text-center mb-10">
+                <h2 className="text-xl md:text-2xl font-bold mb-2">{heading}</h2>
+                <p className="text-gray-600">{subheading}</p>
             </div>
 
 
             {brands.length > 0 ? (
                 <>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                        {brands.map((brand: any) => (
+                        {brands.slice(0, 6).map((brand: any) => (
                             <div
                                 key={brand._id}
                                 className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow h-32"
