@@ -1,9 +1,9 @@
 "use client"
 
+import AppLink from "@/components/home/AppLink"
 import Brands from "@/components/home/Brands"
 import HeaderSlider from "@/components/home/HeaderSlider"
 import NewArrivals from "@/components/home/NewArrivals"
-import NewsLetter from "@/components/home/NewsLetter"
 import TopCategories from "@/components/home/TopCategories"
 import TrendingPart from "@/components/home/TrendingPart"
 import { useNoAuthProductsQuery } from "@/services/apis/publicApis/hooks"
@@ -32,7 +32,7 @@ const Home = () => {
 
             <TrendingPart />
             <NewArrivals data={data} isLoading={isLoading} />
-            {/* <NewsLetter /> */}
+            <AppLink />
         </div>
     )
 }
