@@ -3,21 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Icons } from "@/assets/assets";
+
 
 const ProductDetailPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
-    const [activeTab, setActiveTab] = useState('description');
     const [product, setProduct] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Get product data from query parameter
         const productData = searchParams.get('data');
-        
+
         if (productData) {
             try {
                 const decodedProduct = JSON.parse(decodeURIComponent(productData));
@@ -158,7 +156,7 @@ const ProductDetailPage = () => {
                                     )}
                                 </div>
 
-                                {product.bulk_discount && product.bulk_discount.length > 0 && (
+                                {/* {product.bulk_discount && product.bulk_discount.length > 0 && (
                                     <div className="bg-gray-50 p-3 rounded-md">
                                         <h3 className="font-medium text-default mb-1">Bulk Discounts Available</h3>
                                         {product.bulk_discount.map((discount: any, index: number) => (
@@ -167,7 +165,7 @@ const ProductDetailPage = () => {
                                             </p>
                                         ))}
                                     </div>
-                                )}
+                                )} */}
                             </div>
 
                             {/* Stock Status */}
@@ -244,105 +242,71 @@ const ProductDetailPage = () => {
                     </div>
 
                     {/* Tabs Section */}
-                    <div className="border-t border-gray-200">
-                        <div className="flex border-b border-gray-200">
-                            <button
-                                className={`px-6 py-3 font-medium ${activeTab === 'description' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                onClick={() => setActiveTab('description')}
-                            >
-                                Description
-                            </button>
-                            <button
-                                className={`px-6 py-3 font-medium ${activeTab === 'specifications' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-                                onClick={() => setActiveTab('specifications')}
-                            >
-                                Specifications
-                            </button>
+                    <div className="border-t border-gray-200 p-6 space-y-8">
+                        {/* Product Description */}
+                        <div>
+                            <h3 className="text-lg font-medium mb-4">Product Description</h3>
+                            <p className="text-gray-700 whitespace-pre-line">
+                                {product.description || 'No description available for this product.'}
+                            </p>
                         </div>
 
-                        <div className="p-6">
-                            {activeTab === 'description' && (
-                                <div>
-                                    <h3 className="text-lg font-medium mb-4">Product Description</h3>
-                                    <p className="text-gray-700 whitespace-pre-line">
-                                        {product.description || 'No description available for this product.'}
-                                    </p>
-                                </div>
-                            )}
+                        {/* Product Specifications */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-3">
+                                <h3 className="text-lg font-medium mb-4">Product Details</h3>
+                                {product.part_no && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">Part Number</span>
+                                        <span className="font-medium">{product.part_no}</span>
+                                    </div>
+                                )}
+                                {product.brand && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">Brand</span>
+                                        <span className="font-medium">{product.brand.name}</span>
+                                    </div>
+                                )}
+                                {product.hsn_code && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">HSN Code</span>
+                                        <span className="font-medium">{product.hsn_code}</span>
+                                    </div>
+                                )}
+                                {product.tax && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">Tax Rate</span>
+                                        <span className="font-medium">{product.tax}%</span>
+                                    </div>
+                                )}
+                            </div>
 
-                            {activeTab === 'specifications' && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-3">
-                                        <h3 className="text-lg font-medium mb-4">Product Details</h3>
-                                        {product.part_no && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Part Number</span>
-                                                <span className="font-medium">{product.part_no}</span>
-                                            </div>
-                                        )}
-                                        {product.brand && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Brand</span>
-                                                <span className="font-medium">{product.brand.name}</span>
-                                            </div>
-                                        )}
-                                        {/* {product.segment_type && product.segment_type.length > 0 && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Segment Type</span>
-                                                <span className="font-medium">{product.segment_type.join(', ')}</span>
-                                            </div>
-                                        )} */}
-                                        {product.hsn_code && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">HSN Code</span>
-                                                <span className="font-medium">{product.hsn_code}</span>
-                                            </div>
-                                        )}
-                                        {product.tax && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Tax Rate</span>
-                                                <span className="font-medium">{product.tax}%</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    
-                                    <div className="space-y-3">
-                                        <h3 className="text-lg font-medium mb-4">Pricing & Inventory</h3>
-                                        <div className="flex">
-                                            <span className="text-gray-600 w-40">Customer Price</span>
-                                            <span className="font-medium">{formatPrice(product.customer_price)}</span>
-                                        </div>
-                                        {product.discount_customer_price && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Discounted Price</span>
-                                                <span className="font-medium">{formatPrice(product.discount_customer_price)}</span>
-                                            </div>
-                                        )}
-                                        <div className="flex">
-                                            <span className="text-gray-600 w-40">B2B Price</span>
-                                            <span className="font-medium">{formatPrice(product.b2b_price)}</span>
-                                        </div>
-                                        {product.discount_b2b_price && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Discounted B2B Price</span>
-                                                <span className="font-medium">{formatPrice(product.discount_b2b_price)}</span>
-                                            </div>
-                                        )}
-                                        <div className="flex">
-                                            <span className="text-gray-600 w-40">Stock Available</span>
-                                            <span className="font-medium">{product.item_stock || 0} units</span>
-                                        </div>
-                                        {product.min_qty > 1 && (
-                                            <div className="flex">
-                                                <span className="text-gray-600 w-40">Minimum Order Qty</span>
-                                                <span className="font-medium">{product.min_qty}</span>
-                                            </div>
-                                        )}
-                                    </div>
+                            <div className="space-y-3">
+                                <h3 className="text-lg font-medium mb-4">Pricing & Inventory</h3>
+                                <div className="flex">
+                                    <span className="text-gray-600 w-40">Customer Price</span>
+                                    <span className="font-medium">{formatPrice(product.customer_price)}</span>
                                 </div>
-                            )}
+                                {product.discount_customer_price && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">Discounted Price</span>
+                                        <span className="font-medium">{formatPrice(product.discount_customer_price)}</span>
+                                    </div>
+                                )}
+                                <div className="flex">
+                                    <span className="text-gray-600 w-40">Stock Available</span>
+                                    <span className="font-medium">{product.item_stock || 0} units</span>
+                                </div>
+                                {product.min_qty > 1 && (
+                                    <div className="flex">
+                                        <span className="text-gray-600 w-40">Minimum Order Qty</span>
+                                        <span className="font-medium">{product.min_qty}</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Related Products Section - You can implement this with actual data */}

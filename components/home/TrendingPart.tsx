@@ -36,10 +36,15 @@ const TrendingPart = () => {
                                 originalPrice={product.customer_price}
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
+                                handleNavigate={() => {
+                                    // Your navigation logic here
+                                    const query = encodeURIComponent(JSON.stringify(product));
+                                    router.push(`/products/detail?data=${query}`);
+                                }}
                             />
                         ))}
                     </div>
-                    <button onClick={()=>router.push("/products")} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
+                    <button onClick={() => router.push("/products")} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                         See more
                     </button>
                 </>
