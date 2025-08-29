@@ -7,7 +7,7 @@ import TopCategoriesSkeleton from "../skeletons/home/TopCategoriesSkeleton";
 
 
 const TopCategories = () => {
-    const { data, isLoading } = useNoAuthCategoriesQuery({page:1, limit: 10});
+    const { data, isLoading } = useNoAuthCategoriesQuery({ page: 1, limit: 15 });
     const router = useRouter();
     const categories = (data as any)?._payload || [];
     if (isLoading) {
@@ -23,7 +23,7 @@ const TopCategories = () => {
             {categories.length > 0 ? (
                 <>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                        {categories.slice(0,10).map((category: any) => (
+                        {categories.slice(0, 10).map((category: any) => (
                             <div
                                 key={category._id}
                                 className="flex flex-col items-center shadow p-6 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer border border-gray-100"
@@ -45,12 +45,12 @@ const TopCategories = () => {
                             </div>
                         ))}
                     </div>
-
-                    <div className="text-center mt-8 w-full">
+                    {categories.length > 12 && (<div className="text-center mt-8 w-full">
                         <button onClick={() => { router.push("/categories") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                             Browse All
                         </button>
-                    </div>
+                    </div>)}
+
                 </>
             ) : (
                 <div className="text-center text-gray-500">

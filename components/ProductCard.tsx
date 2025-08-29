@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             : null;
 
     return (
-        <div className="group flex flex-col items-start rounded-lg shadow-md gap-1.5 w-full max-w-[220px] cursor-pointer hover:-translate-y-2 duration-300 p-2 bg-gray-50 transition-all hover:shadow-xl">
+        <div className="group flex flex-col items-start rounded-lg shadow-md gap-1.5 w-full max-w-[220px] cursor-pointer hover:-translate-y-2 duration-300 p-2 bg-gray-50 transition-all sm:hover:shadow-xl">
             <div className="relative rounded-lg bg-white w-full border border-gray-200 aspect-square flex items-center justify-center overflow-hidden">
                 {imageUrl ? (
                     <Image
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 )}
 
                 {/* View Detail Button - appears on hover */}
-                <div className="absolute inset-0 bg-black/50 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-end justify-center opacity-0 group-hover:opacity-100 pb-4">
+                <div className="hidden absolute inset-0 bg-black/50 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 sm:flex items-end justify-center opacity-0 group-hover:opacity-100 pb-4">
                     <button
                         onClick={handleNavigate}
                         className="bg-white text-gray-800 py-2 px-4 rounded-md font-medium text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-blue-50 border border-gray-200"
