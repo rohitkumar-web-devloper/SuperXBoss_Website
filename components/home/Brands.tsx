@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useNoAuthBrandsQuery } from "@/services/apis/publicApis/hooks";
 
 import { useRouter } from "next/navigation";
+import BrandsSkeleton from "../skeletons/BrandsSkeleton";
 
 type SectionProps = {
     heading: string;
@@ -14,7 +15,7 @@ const Brands = ({ heading, subheading, type }: SectionProps) => {
     const router = useRouter()
     if (isLoading) {
         return (
-            <div className="a">sasa</div>
+            <BrandsSkeleton />
         );
     }
 
@@ -39,7 +40,7 @@ const Brands = ({ heading, subheading, type }: SectionProps) => {
             {brands.length > 0 ? (
                 <>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-                        {brands.slice(0, 6).map((brand: any) => (
+                        {brands.slice(0, 12).map((brand: any) => (
                             <div
                                 key={brand._id}
                                 className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow h-32"
@@ -59,11 +60,16 @@ const Brands = ({ heading, subheading, type }: SectionProps) => {
                             </div>
                         ))}
                     </div>
-                    <div className="text-center mt-8">
-                        <button onClick={() => { router.push("/brands") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-                            Browse All
-                        </button>
-                    </div>
+                    {brands.length > 12 && (
+                        <div className="text-center mt-8">
+                            <button
+                                onClick={() => router.push("/brands")}
+                                className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition"
+                            >
+                                Browse All
+                            </button>
+                        </div>
+                    )}
                 </>
             ) : (
                 <div className="text-center py-10">No brands available</div>

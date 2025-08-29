@@ -61,7 +61,7 @@ const ContactUs = () => {
                         ))}
                     </div>
 
-                    <div className="mt-8">
+                    {/* <div className="mt-8">
                         <Image
                             src={contactImage}
                             alt="Our office"
@@ -69,7 +69,7 @@ const ContactUs = () => {
                             height={300}
                             className="rounded-lg shadow-sm w-full h-auto"
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Contact Form */}

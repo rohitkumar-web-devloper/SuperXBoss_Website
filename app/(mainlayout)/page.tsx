@@ -12,7 +12,7 @@ const Home = () => {
     const { data, isLoading } = useNoAuthProductsQuery({
         new_arrival: true,
         page: 1,
-        limit: 10
+        limit: 10,
     });
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto ">

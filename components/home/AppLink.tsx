@@ -1,4 +1,4 @@
-import { SiGoogleplay, SiAppstore } from "react-icons/si";
+import { SiGoogleplay } from "react-icons/si";
 
 const AppLink = () => {
     return (
@@ -21,17 +21,6 @@ const AppLink = () => {
                     <SiGoogleplay className="text-2xl" />
                     Google Play
                 </a>
-
-                {/* App Store */}
-                {/* <a
-                    href="https://apps.apple.com/app/idYOUR_APP_ID"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition"
-                >
-                    <SiAppstore className="text-2xl" />
-                    App Store
-                </a> */}
             </div>
         </div>
     );

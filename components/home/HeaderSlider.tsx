@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import HeaderSliderSkeleton from "../skeletons/home/HeaderSliderSkeleton";
+import { useRouter } from "next/navigation";
 
 interface Product {
     _id: string;
@@ -16,16 +17,16 @@ interface Product {
     };
 }
 
-const   HeaderSlider = ({ data, isLoading }: any) => {
+const HeaderSlider = ({ data, isLoading }: any) => {
     const sliderData = (data?._payload as Product[])?.slice(0, 4) || [];
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
-
+    const router = useRouter();
     useEffect(() => {
         if (isHovered || sliderData.length === 0) return;
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-        }, 5000); 
+        }, 5000);
         return () => clearInterval(interval);
     }, [isHovered, sliderData.length]);
 
@@ -47,7 +48,7 @@ const   HeaderSlider = ({ data, isLoading }: any) => {
 
     if (isLoading) {
         return (
-            <HeaderSliderSkeleton/>
+            <HeaderSliderSkeleton />
         );
     }
 
@@ -57,6 +58,11 @@ const   HeaderSlider = ({ data, isLoading }: any) => {
                 No products available
             </div>
         );
+    }
+
+    const handleNavigate = (product: any) => {
+        const query = encodeURIComponent(JSON.stringify(product));
+        router.push(`/products/detail?data=${query}`);
     }
 
     return (
@@ -113,9 +119,11 @@ const   HeaderSlider = ({ data, isLoading }: any) => {
                             <p className="text-gray-600 mb-6 line-clamp-2 text-sm">
                                 {slide.description.replace(/\r\n/g, " ")}
                             </p>
-                            {/* <button className="group flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full">
+                            <button
+                                onClick={() => handleNavigate(slide)}
+                                className="group cursor-pointer flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full">
                                 View More
-                            </button> */}
+                            </button>
                         </div>
 
                         <div className="flex items-center justify-center flex-1 md:w-1/2">
@@ -127,7 +135,7 @@ const   HeaderSlider = ({ data, isLoading }: any) => {
                                     width={400}
                                     height={300}
                                     style={{ objectFit: "contain" }}
-                                    priority={index === 0} 
+                                    priority={index === 0}
                                 />
                             )}
                         </div>

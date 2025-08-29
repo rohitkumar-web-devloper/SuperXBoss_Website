@@ -27,7 +27,7 @@ const TrendingPart = () => {
             ) : products.length > 0 ? (
                 <>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
-                        {products.map((product: any) => (
+                        {products.slice(0,10).map((product: any) => (
                             <ProductCard
                                 key={product._id}
                                 id={product._id}
@@ -37,7 +37,6 @@ const TrendingPart = () => {
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
                                 handleNavigate={() => {
-                                    // Your navigation logic here
                                     const query = encodeURIComponent(JSON.stringify(product));
                                     router.push(`/products/detail?data=${query}`);
                                 }}
