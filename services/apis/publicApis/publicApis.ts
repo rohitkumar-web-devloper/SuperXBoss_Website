@@ -48,3 +48,9 @@ export const submitContactQuery = async (payload: ContactUsPayload): Promise<any
     const response = await api.post(NO_AUTH_ENDPOINTS.CONTACT_US, payload);
     return response.data;
 };
+
+
+export const getNoAuthDocuments = async (): Promise<any> => {
+    const response = await api.get(NO_AUTH_ENDPOINTS.DOCUMENTS);
+    return response.data;
+};
