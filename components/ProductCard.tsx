@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import Image from 'next/image';
-import { Icons } from "@/assets/assets";
+// import { Icons } from "@/assets/assets";
 
 interface ProductCardProps {
     id: string;
@@ -45,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 )}
 
 
-                <button
+                {/* <button
                     className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors z-10"
                     aria-label="Add to wishlist"
                 >
@@ -55,7 +55,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                         width={12}
                         height={12}
                     />
-                </button>
+                </button> */}
 
                 {discount && (
                     <div className="absolute top-2 left-2">

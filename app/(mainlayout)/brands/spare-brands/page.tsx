@@ -8,13 +8,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import BrandsSkeleton from '@/components/skeletons/BrandsSkeleton';
 
-const TopBrandsPage = () => {
+const SpareBrandsPage = () => {
     const limit = 10;
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
         queryKey: ['brands'],
         queryFn: ({ pageParam = 1 }) =>
             getNoAuthBrands({
+                type:"Spare Parts",
                 page: pageParam,
                 limit: limit,
             }),
@@ -55,7 +56,7 @@ const TopBrandsPage = () => {
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto py-8">
             <div className="mb-8">
-                <h1 className="text-xl md:text-2xl font-bold mb-2">Top Brands</h1>
+                <h1 className="text-xl md:text-2xl font-bold mb-2">Spare Brands</h1>
                 <p className="text-gray-600">Explore our most popular brand collections</p>
             </div>
 
@@ -113,4 +114,4 @@ const TopBrandsPage = () => {
     );
 };
 
-export default TopBrandsPage;
+export default SpareBrandsPage;

@@ -9,8 +9,9 @@ type SectionProps = {
     heading: string;
     subheading?: string;
     type?: "Vehicle" | "Spare Parts";
+    navigateType: string,
 };
-const Brands = ({ heading, subheading, type }: SectionProps) => {
+const Brands = ({ heading, subheading, type, navigateType }: SectionProps) => {
     const { data, isLoading, isError } = useNoAuthBrandsQuery({ type: type });
     const router = useRouter()
     if (isLoading) {
@@ -63,7 +64,7 @@ const Brands = ({ heading, subheading, type }: SectionProps) => {
                     {brands.length > 12 && (
                         <div className="text-center mt-8">
                             <button
-                                onClick={() => router.push("/brands")}
+                                onClick={() => router.push(`/brands/${navigateType}`)}
                                 className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition"
                             >
                                 Browse All

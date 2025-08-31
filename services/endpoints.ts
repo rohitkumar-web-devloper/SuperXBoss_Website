@@ -6,11 +6,11 @@ export const CUSTOMER_ENDPOINTS = {
     UPDATE: '/customer/',
     GET_BY_ID: (id: string) => `/users/${id}`,
 };
-
 export const NO_AUTH_ENDPOINTS = {
     GET_CATEGORIES: "/no-auth-categories",
     GET_PRODUCTS: "/no-auth-products",
+    GET_PRODUCT_BY_SLUG: "/no-auth-products/:slug", // new endpoint
     GET_BRANDS: "/no-auth-brands",
-    CONTACT_US: "/in-query", 
-    DOCUMENTS: "/documents", 
+    CONTACT_US: "/in-query",
+    DOCUMENTS: "/documents",
 };
