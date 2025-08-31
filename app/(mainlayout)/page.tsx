@@ -4,6 +4,7 @@ import AppLink from "@/components/home/AppLink"
 import Brands from "@/components/home/Brands"
 import HeaderSlider from "@/components/home/HeaderSlider"
 import NewArrivals from "@/components/home/NewArrivals"
+import PopularPart from "@/components/home/PopularPart"
 import TopCategories from "@/components/home/TopCategories"
 import TrendingPart from "@/components/home/TrendingPart"
 import { useNoAuthProductsQuery } from "@/services/apis/publicApis/hooks"
@@ -21,6 +22,7 @@ const Home = () => {
                 heading="Top Spare Parts Brands"
                 subheading="Best spare parts brands for your needs"
                 type="Spare Parts"
+                navigateType="spare-brands"
             />
             <TopCategories />
 
@@ -28,10 +30,12 @@ const Home = () => {
                 heading="Top Vehicle Brands"
                 subheading="Most popular vehicles this week"
                 type="Vehicle"
+                navigateType="vehicle-brands"
             />
 
-            <TrendingPart />
+            <PopularPart />
             <NewArrivals data={data} isLoading={isLoading} />
+            <TrendingPart />
             <AppLink />
         </div>
     )

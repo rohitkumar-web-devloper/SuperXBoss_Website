@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import HeaderSliderSkeleton from "../skeletons/home/HeaderSliderSkeleton";
 import { useRouter } from "next/navigation";
+import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
 
 interface Product {
     _id: string;
@@ -22,6 +23,7 @@ const HeaderSlider = ({ data, isLoading }: any) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const router = useRouter();
+
     useEffect(() => {
         if (isHovered || sliderData.length === 0) return;
         const interval = setInterval(() => {
@@ -34,6 +36,16 @@ const HeaderSlider = ({ data, isLoading }: any) => {
         setCurrentSlide(index);
     };
 
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % sliderData.length);
+    };
+
+    const prevSlide = () => {
+        setCurrentSlide((prev) =>
+            prev === 0 ? sliderData.length - 1 : prev - 1
+        );
+    };
+
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("en-IN", {
             style: "currency",
@@ -41,15 +53,12 @@ const HeaderSlider = ({ data, isLoading }: any) => {
         }).format(price);
     };
 
-
     const calculateDiscount = (originalPrice: number, discountedPrice: number) => {
         return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100);
     };
 
     if (isLoading) {
-        return (
-            <HeaderSliderSkeleton />
-        );
+        return <HeaderSliderSkeleton />;
     }
 
     if (sliderData.length === 0) {
@@ -61,9 +70,9 @@ const HeaderSlider = ({ data, isLoading }: any) => {
     }
 
     const handleNavigate = (product: any) => {
-        const query = encodeURIComponent(JSON.stringify(product));
-        router.push(`/products/detail?data=${query}`);
-    }
+        if (!product.slug) return;
+        router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+    };
 
     return (
         <div
@@ -71,6 +80,7 @@ const HeaderSlider = ({ data, isLoading }: any) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {/* Slides */}
             <div
                 className="flex transition-transform duration-700 ease-in-out"
                 style={{
@@ -84,10 +94,15 @@ const HeaderSlider = ({ data, isLoading }: any) => {
                     >
                         {slide.discount_customer_price < slide.customer_price && (
                             <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
-                                {calculateDiscount(slide.customer_price, slide.discount_customer_price)}% OFF
+                                {calculateDiscount(
+                                    slide.customer_price,
+                                    slide.discount_customer_price
+                                )}
+                                % OFF
                             </div>
                         )}
 
+                        {/* Left Text Section */}
                         <div className="md:pl-8 mt-10 md:mt-0 md:w-1/2">
                             <div className="flex items-center gap-2 mb-2">
                                 {slide.brand?.logo && (
@@ -103,7 +118,7 @@ const HeaderSlider = ({ data, isLoading }: any) => {
                                     {slide.brand?.name}
                                 </span>
                             </div>
-                            <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl  font-semibold text-default">
+                            <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl font-semibold text-default">
                                 {slide.name}
                             </h1>
 
@@ -121,15 +136,17 @@ const HeaderSlider = ({ data, isLoading }: any) => {
                             </p>
                             <button
                                 onClick={() => handleNavigate(slide)}
-                                className="group cursor-pointer flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full">
+                                className="group cursor-pointer flex items-center gap-2 px-6 py-2.5 font-medium bg-default text-white rounded-full"
+                            >
                                 View More
                             </button>
                         </div>
 
+                        {/* Right Image Section */}
                         <div className="flex items-center justify-center flex-1 md:w-1/2">
                             {slide.images?.length > 0 && (
                                 <Image
-                                    className="md:w-80 w-64 h-64 "
+                                    className="md:w-80 w-64 h-64"
                                     src={slide.images[0]}
                                     alt={slide.name}
                                     width={400}
@@ -143,6 +160,21 @@ const HeaderSlider = ({ data, isLoading }: any) => {
                 ))}
             </div>
 
+            {/* ✅ Left / Right Arrows (Mobile only) */}
+            <button
+                onClick={prevSlide}
+                className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full sm:hidden"
+            >
+                <BiChevronLeft size={20} />
+            </button>
+            <button
+                onClick={nextSlide}
+                className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full sm:hidden"
+            >
+                <BiChevronRight size={20} />
+            </button>
+
+            {/* Dots */}
             <div className="flex items-center justify-center gap-2 mt-8">
                 {sliderData.map((_, index) => (
                     <button
@@ -159,123 +191,3 @@ const HeaderSlider = ({ data, isLoading }: any) => {
 };
 
 export default HeaderSlider;
-// "use client";
-// import Image from "next/image";
-// import React, { useState, useEffect } from "react";
-// import arrow from "@assets/arrow_icon.svg";
-// import cannonCameraImage from "@assets/cannon_camera_image.png";
-// import cannonCameraImage2 from "@assets/jbl_soundbox_image.png";
-// import cannonCameraImage3 from "@assets/macbook_image.png";
-
-// const HeaderSlider = () => {
-//     const sliderData = [
-//         {
-//             id: 1,
-//             title: "Experience Pure Sound - Your Perfect Headphones Awaits!",
-//             offer: "Limited Time Offer 30% Off",
-//             buttonText1: "Buy now",
-//             buttonText2: "Find more",
-//             imgSrc: cannonCameraImage
-//         },
-//         {
-//             id: 2,
-//             title: "Next-Level Gaming Starts Here - Discover PlayStation 5 Today!",
-//             offer: "Hurry up only few lefts!",
-//             buttonText1: "Shop Now",
-//             buttonText2: "Explore Deals",
-//             imgSrc: cannonCameraImage2
-//         },
-//         {
-//             id: 3,
-//             title: "Power Meets Elegance - Apple MacBook Pro is Here for you!",
-//             offer: "Exclusive Deal 40% Off",
-//             buttonText1: "Order Now",
-//             buttonText2: "Learn More",
-//             imgSrc: cannonCameraImage3
-//         },
-//     ];
-
-//     const [currentSlide, setCurrentSlide] = useState(0);
-//     const [isHovered, setIsHovered] = useState(false);
-
-//     useEffect(() => {
-//         if (isHovered) return;
-//         const interval = setInterval(() => {
-//             setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-//         }, 3000);
-//         return () => clearInterval(interval);
-//     }, [isHovered, sliderData.length]);
-
-//     const handleSlideChange = (index: number) => {
-//         setCurrentSlide(index);
-//     };
-
-//     return (
-//         <div
-//             className="overflow-hidden relative w-full"
-//             onMouseEnter={() => setIsHovered(true)}
-//             onMouseLeave={() => setIsHovered(false)}
-//         >
-//             <div
-//                 className="flex transition-transform duration-700 ease-in-out"
-//                 style={{
-//                     transform: `translateX(-${currentSlide * 100}%)`,
-//                 }}
-//             >
-//                 {sliderData.map((slide, index) => (
-//                     <div
-//                         key={slide.id}
-//                         className="flex flex-col-reverse md:flex-row items-center justify-between bg-[#E6E9F2] py-8 md:px-14 px-5 mt-6 rounded min-w-full"
-//                     >
-//                         <div className="md:pl-8 mt-10 md:mt-0">
-//                             <p className="md:text-base text-default-700 pb-1">
-//                                 {slide.offer}
-//                             </p>
-//                             <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl font-semibold">
-//                                 {slide.title}
-//                             </h1>
-//                             <div className="flex items-center mt-4 md:mt-6">
-//                                 <button className="md:px-10 px-7 md:py-2.5 py-2 bg-default rounded-full text-white font-medium">
-//                                     {slide.buttonText1}
-//                                 </button>
-// <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
-//     {slide.buttonText2}
-//     <Image
-//         src={arrow}
-//         alt="arrow_icon"
-//         width={16}
-//         height={16}
-//         className="transition-transform group-hover:translate-x-1"
-//     />
-// </button>
-//                             </div>
-//                         </div>
-//                         <div className="flex items-center flex-1 justify-center">
-//                             <Image
-//                                 className="md:w-72 w-48"
-//                                 src={slide.imgSrc}
-//                                 alt={`Slide ${index + 1}`}
-//                                 width={300}
-//                                 height={200}
-//                                 style={{ objectFit: "contain" }}
-//                             />
-//                         </div>
-//                     </div>
-//                 ))}
-//             </div>
-
-//             <div className="flex items-center justify-center gap-2 mt-8">
-//                 {sliderData.map((_, index) => (
-//                     <div
-//                         key={index}
-//                         onClick={() => handleSlideChange(index)}
-//                         className={`h-2 w-2 rounded-full cursor-pointer ${currentSlide === index ? "bg-default" : "bg-gray-500/30"
-//                             }`}
-//                     ></div>
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default HeaderSlider;

@@ -1,5 +1,6 @@
 import { api } from "@/services/apiClient";
 import { NO_AUTH_ENDPOINTS } from "@/services/endpoints";
+import { NoAuthProductBySlugResponse } from "@/types/productTypes";
 
 export interface NoAuthProductsParams {
     trend_part?: boolean;
@@ -46,5 +47,19 @@ export const getNoAuthBrands = async (params?: NoAuthBrandsParams): Promise<any>
 // ✅ New API for Contact Queries
 export const submitContactQuery = async (payload: ContactUsPayload): Promise<any> => {
     const response = await api.post(NO_AUTH_ENDPOINTS.CONTACT_US, payload);
+    return response.data;
+};
+
+
+export const getNoAuthDocuments = async (): Promise<any> => {
+    const response = await api.get(NO_AUTH_ENDPOINTS.DOCUMENTS);
+    return response.data;
+};
+
+
+export const getNoAuthProductBySlug = async (slug: string): Promise<NoAuthProductBySlugResponse> => {
+    if (!slug) throw new Error("Slug is required");
+    const endpoint = NO_AUTH_ENDPOINTS.GET_PRODUCT_BY_SLUG.replace(":slug", encodeURIComponent(slug));
+    const response = await api.get(endpoint);
     return response.data;
 };

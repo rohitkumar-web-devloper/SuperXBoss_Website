@@ -5,10 +5,10 @@ import { useNoAuthProductsQuery } from '@/services/apis/publicApis/hooks';
 import TrendingPartSkeleton from '../skeletons/home/TrendingPartSkeleton';
 import { useRouter } from 'next/navigation';
 
-const TrendingPart = () => {
+const PopularPart = () => {
     const router = useRouter();
     const { data, isLoading, isError } = useNoAuthProductsQuery({
-        trend_part: true,
+        pop_item: true,
         page: 1,
         limit: 10
     });
@@ -20,7 +20,7 @@ const TrendingPart = () => {
 
     return (
         <div className="flex flex-col items-center pt-14">
-            <p className="text-2xl font-medium text-left w-full">Trending products</p>
+            <p className="text-2xl font-medium text-left w-full">Popular Products</p>
 
             {isError ? (
                 <div className="text-center text-red-500 py-10">Error loading products</div>
@@ -44,7 +44,7 @@ const TrendingPart = () => {
                     </div>
                     {
                         products.length > 5 && (
-                            <button onClick={() => router.push("/products/trending")} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
+                            <button onClick={() => router.push("/products/popular")} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
                                 See more
                             </button>
                         )
@@ -57,4 +57,4 @@ const TrendingPart = () => {
     );
 };
 
-export default TrendingPart;
+export default PopularPart;
