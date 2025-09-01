@@ -96,7 +96,7 @@ const PopularProductsPage = () => {
                         Load More
                     </Button>
                 ) : (
-                    <p className="text-gray-500">No more products to load</p>
+                    <p className="text-gray-500 py-10">No more products to load</p>
                 )}
             </div>
         </div>

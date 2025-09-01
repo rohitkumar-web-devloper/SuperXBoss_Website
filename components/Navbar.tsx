@@ -21,36 +21,37 @@ const Navbar = () => {
             <nav className="hidden md:flex items-center justify-between px-6 xl:px-16 py-4 border-b border-gray-300 text-gray-700 bg-white">
                 <Link href="/" className="flex-shrink-0">
                     <Image
-                        className="cursor-pointer w-28 md:w-32"
+                        className="cursor-pointer w-36 md:w-44" // ⬅️ Increased size
                         src={logo}
                         alt="logo"
-                        width={128}
-                        height={32}
+                        width={180}   // ⬅️ Updated width
+                        height={60}   // ⬅️ Updated height
                     />
+
                 </Link>
 
                 {/* Centered Navigation Links */}
                 <div className="flex items-center justify-center gap-4 lg:gap-8 mx-4">
-                    <Link 
-                        href="/" 
+                    <Link
+                        href="/"
                         className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/") ? "text-default font-medium" : ""}`}
                     >
                         Home
                     </Link>
-                    <Link 
-                        href="/products" 
+                    <Link
+                        href="/products"
                         className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/products") ? "text-default font-medium" : ""}`}
                     >
                         Products
                     </Link>
-                    <Link 
-                        href="/contact" 
+                    <Link
+                        href="/contact"
                         className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/contact") ? "text-default font-medium" : ""}`}
                     >
                         Contact
                     </Link>
-                    <Link 
-                        href="/about" 
+                    <Link
+                        href="/about"
                         className={`hover:text-gray-900 transition-colors duration-200 ${isActive("/about") ? "text-default font-medium" : ""}`}
                     >
                         About Us

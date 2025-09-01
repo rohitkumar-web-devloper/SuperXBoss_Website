@@ -26,6 +26,7 @@ const TopCategories = () => {
                         {categories.slice(0, 10).map((category: any) => (
                             <div
                                 key={category._id}
+                                onClick={() => router.push(`/products/category/${category._id}`)}
                                 className="flex flex-col items-center shadow p-6 rounded-lg bg-white hover:bg-gray-50 transition-colors cursor-pointer border border-gray-100"
                             >
                                 {category.picture && (
@@ -47,7 +48,7 @@ const TopCategories = () => {
                     </div>
                     {categories.length > 12 && (<div className="text-center mt-8 w-full">
                         <button onClick={() => { router.push("/categories") }} className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-                            Browse All
+                            See More
                         </button>
                     </div>)}
 

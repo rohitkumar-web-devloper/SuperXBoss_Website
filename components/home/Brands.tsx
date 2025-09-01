@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useNoAuthBrandsQuery } from "@/services/apis/publicApis/hooks";
-
 import { useRouter } from "next/navigation";
 import BrandsSkeleton from "../skeletons/BrandsSkeleton";
 
@@ -9,16 +8,15 @@ type SectionProps = {
     heading: string;
     subheading?: string;
     type?: "Vehicle" | "Spare Parts";
-    navigateType: string,
+    navigateType: string;
+    navigateViewProduct?: string; // ✅ new prop
 };
-const Brands = ({ heading, subheading, type, navigateType }: SectionProps) => {
+
+const Brands = ({ heading, subheading, type, navigateType, navigateViewProduct }: SectionProps) => {
     const { data, isLoading, isError } = useNoAuthBrandsQuery({ type: type });
-    const router = useRouter()
-    if (isLoading) {
-        return (
-            <BrandsSkeleton />
-        );
-    }
+    const router = useRouter();
+
+    if (isLoading) return <BrandsSkeleton />;
 
     if (isError) {
         return (
@@ -31,12 +29,11 @@ const Brands = ({ heading, subheading, type, navigateType }: SectionProps) => {
     const brands = data?._payload || [];
 
     return (
-        <section className="py-12  md:px-8 max-w-7xl mx-auto">
+        <section className="py-12 md:px-8 max-w-7xl mx-auto">
             <div className="text-center mb-10">
                 <h2 className="text-xl md:text-2xl font-bold mb-2">{heading}</h2>
                 <p className="text-gray-600">{subheading}</p>
             </div>
-
 
             {brands.length > 0 ? (
                 <>
@@ -44,7 +41,12 @@ const Brands = ({ heading, subheading, type, navigateType }: SectionProps) => {
                         {brands.slice(0, 12).map((brand: any) => (
                             <div
                                 key={brand._id}
-                                className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow h-32"
+                                onClick={() => {
+                                    if (navigateViewProduct) {
+                                        router.push(`${navigateViewProduct}/${brand._id}`);
+                                    }
+                                }}
+                                className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow h-32 cursor-pointer"
                             >
                                 {brand.logo && (
                                     <div className="relative w-full h-20">
@@ -61,13 +63,14 @@ const Brands = ({ heading, subheading, type, navigateType }: SectionProps) => {
                             </div>
                         ))}
                     </div>
+
                     {brands.length > 12 && (
                         <div className="text-center mt-8">
                             <button
                                 onClick={() => router.push(`/brands/${navigateType}`)}
                                 className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition"
                             >
-                                Browse All
+                                See More
                             </button>
                         </div>
                     )}
