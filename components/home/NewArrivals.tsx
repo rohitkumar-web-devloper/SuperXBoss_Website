@@ -13,8 +13,10 @@ const NewArrivals = ({ data, isLoading }: any) => {
 
     const handleNavigate = (product: any) => {
         if (!product.slug) return;
-        router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+        router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
     };
+
+
     const products = data?._payload || [];
 
     const calculateDiscount = (customer_price: number, discount_customer_price: number) => {
@@ -52,6 +54,24 @@ const NewArrivals = ({ data, isLoading }: any) => {
                             <div className="group-hover:-translate-y-4 transition duration-300 absolute bottom-8 left-8 text-white space-y-1.5">
                                 <p className="font-semibold text-lg">{name}</p>
                                 <p className="text-xs leading-4 max-w-52 line-clamp-2">{description}</p>
+
+                                {/* ✅ Show prices */}
+                                <div className="flex items-center gap-2 mt-1">
+                                    {discount_customer_price ? (
+                                        <>
+                                            <span className="text-lg font-bold text-yellow-300">
+                                                ₹{discount_customer_price}
+                                            </span>
+                                            <span className="text-sm line-through text-gray-300">
+                                                ₹{customer_price}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span className="text-lg font-bold text-yellow-300">
+                                            ₹{customer_price}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
 
                             {discount > 0 && (
@@ -62,6 +82,7 @@ const NewArrivals = ({ data, isLoading }: any) => {
                                 </div>
                             )}
                         </div>
+
                     );
                 })}
             </div>

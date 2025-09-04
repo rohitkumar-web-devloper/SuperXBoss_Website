@@ -54,10 +54,7 @@ const NewArrivalsProductsPage = () => {
         return <div className="text-center py-10">Error loading products</div>;
     }
 
-    const handleNavigate = (product: any) => {
-        const query = encodeURIComponent(JSON.stringify(product));
-        router.push(`/products/detail?data=${query}`);
-    };
+
 
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto py-8">
@@ -77,7 +74,6 @@ const NewArrivalsProductsPage = () => {
                                 handleNavigate={() => {
                                     router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
                                 }}
-
                             />
                         ))}
                     </React.Fragment>

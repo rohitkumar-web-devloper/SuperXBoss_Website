@@ -39,6 +39,7 @@ const TrendingPart = () => {
                                 handleNavigate={() => {
                                     router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
                                 }}
+
                             />
                         ))}
                     </div>

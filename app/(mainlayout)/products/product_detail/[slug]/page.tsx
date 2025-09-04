@@ -2,23 +2,23 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useNoAuthProductBySlugQuery } from '@/services/apis/publicApis/hooks';
 
 const ProductDetailPage = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const slug = searchParams.get("slug");
+    const { slug } = useParams<{ slug: string }>();
     const [selectedMedia, setSelectedMedia] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [showAppPopup, setShowAppPopup] = useState(false);
 
-    const { data, isLoading, isError } = useNoAuthProductBySlugQuery(slug || "");
+    const { data, isLoading, isError } = useNoAuthProductBySlugQuery(slug ?? '');
     const product = data?._payload;
 
-    const discountPercentage = product?.discount_customer_price && product?.customer_price > product?.discount_customer_price
-        ? Math.round(((product.customer_price - product.discount_customer_price) / product.customer_price) * 100)
-        : 0;
+    const discountPercentage =
+        product?.discount_customer_price && product?.customer_price > product?.discount_customer_price
+            ? Math.round(((product.customer_price - product.discount_customer_price) / product.customer_price) * 100)
+            : 0;
 
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(price);
@@ -53,7 +53,7 @@ const ProductDetailPage = () => {
     }
 
     const images = product.images || [];
-    const videos = product.videos || [];
+    const videos = product.videos || (product.video ? [product.video] : []); // ✅ Support single video
     const hasVideos = videos.length > 0;
 
     return (
@@ -75,7 +75,9 @@ const ProductDetailPage = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <p className="text-gray-600 mb-6">For the best shopping experience, please download our mobile app.</p>
+                            <p className="text-gray-600 mb-6">
+                                For the best shopping experience, please download our mobile app.
+                            </p>
                             <div className="flex flex-col space-y-4">
                                 <a
                                     href="https://play.google.com/store/apps/details?id=com.yourcompany.yourapp"
@@ -109,14 +111,15 @@ const ProductDetailPage = () => {
                                         <span className="text-gray-400">No Image Available</span>
                                     </div>
                                 )}
-                                <div className="absolute top-4 left-4 flex flex-col space-y-2">
-                                    {discountPercentage > 0 && (
-                                        <span className="px-3 py-1 bg-red-600 text-white text-sm font-bold rounded-full">{discountPercentage}% OFF</span>
-                                    )}
-                                    {product.trend_part && (
-                                        <span className="px-3 py-1 bg-purple-600 text-white text-sm font-bold rounded-full">TRENDING</span>
-                                    )}
-                                </div>
+
+                                {/* Points badge */}
+                                {product.point && (
+                                    <div className="absolute top-4 left-4">
+                                        <span className="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                                            {product.point} Points
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Thumbnails */}
@@ -125,10 +128,18 @@ const ProductDetailPage = () => {
                                     {images.map((item: string, index: number) => (
                                         <button
                                             key={index}
-                                            className={`relative aspect-square rounded-md overflow-hidden border-2 ${selectedMedia === index ? 'border-default-500' : 'border-gray-200'}`}
+                                            className={`relative aspect-square rounded-md overflow-hidden border-2 ${
+                                                selectedMedia === index ? 'border-default-500' : 'border-gray-200'
+                                            }`}
                                             onClick={() => setSelectedMedia(index)}
                                         >
-                                            <Image src={item} alt={`${product.name} view ${index + 1}`} fill className="object-contain" unoptimized />
+                                            <Image
+                                                src={item}
+                                                alt={`${product.name} view ${index + 1}`}
+                                                fill
+                                                className="object-contain"
+                                                unoptimized
+                                            />
                                         </button>
                                     ))}
                                 </div>
@@ -137,9 +148,8 @@ const ProductDetailPage = () => {
 
                         {/* Product Info */}
                         <div className="space-y-6">
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center space-x-3">
-                                {product.name}
-                            </h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{product.name}</h1>
+
                             {product.brand && (
                                 <p className="text-gray-600 mt-2 flex text-lg items-center space-x-2">
                                     Brand:
@@ -158,28 +168,58 @@ const ProductDetailPage = () => {
                                     </span>
                                 </p>
                             )}
-                            <p className="text-gray-500 text-sm mt-1">Part No: {product.part_no}</p>
 
-                            {/* Price */}
+                            {/* ✅ Product IDs */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
+                                <p><span className="font-medium">Part No:</span> {product.part_no}</p>
+                                <p><span className="font-medium">SKU ID:</span> {product.sku_id}</p>
+                                <p><span className="font-medium">HSN Code:</span> {product.hsn_code}</p>
+                            </div>
+
+                            {/* ✅ Price + Unit */}
                             <div className="space-y-2">
                                 <div className="flex items-center space-x-3">
-                                    <span className="text-2xl font-bold text-gray-900">{formatPrice(product.discount_customer_price || product.customer_price || 0)}</span>
-                                    {product.discount_customer_price && product.customer_price > product.discount_customer_price && (
-                                        <span className="text-xl text-gray-500 line-through">{formatPrice(product.customer_price)}</span>
+                                    <span className="text-2xl font-bold text-gray-900">
+                                        {formatPrice(product.discount_customer_price || product.customer_price || 0)}
+                                    </span>
+                                    {product.unit?.name && (
+                                        <span className="text-gray-600 font-medium text-lg">
+                                            / {product.unit.pc} {product.unit.name}
+                                        </span>
                                     )}
+                                    {product.discount_customer_price &&
+                                        product.customer_price > product.discount_customer_price && (
+                                            <span className="text-xl text-gray-500 line-through">
+                                                {formatPrice(product.customer_price)}
+                                            </span>
+                                        )}
                                 </div>
                                 {discountPercentage > 0 && (
-                                    <p className="text-green-600 font-medium">You save {formatPrice(product.customer_price - (product.discount_customer_price || 0))} ({discountPercentage}%)</p>
+                                    <p className="text-green-600 font-medium">
+                                        You save{' '}
+                                        {formatPrice(
+                                            product.customer_price - (product.discount_customer_price || 0)
+                                        )}{' '}
+                                        ({discountPercentage}%)
+                                    </p>
                                 )}
                             </div>
 
                             {/* Stock */}
-                            <p className={`text-sm font-medium ${product.item_stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                {product.item_stock > 0 ? `In Stock (${product.item_stock} available)` : 'Out of Stock'}
+                            <p
+                                className={`text-sm font-medium ${
+                                    product.item_stock > 0 ? 'text-green-600' : 'text-red-600'
+                                }`}
+                            >
+                                {product.item_stock > 0
+                                    ? `In Stock (${product.item_stock} available)`
+                                    : 'Out of Stock'}
                             </p>
 
                             {/* Quantity Selector */}
-                            {product.min_qty && product.min_qty > 1 && <span className="text-sm text-gray-500">Minimum: {product.min_qty}</span>}
+                            {product.min_qty && product.min_qty > 1 && (
+                                <span className="text-sm text-gray-500">Minimum: {product.min_qty}</span>
+                            )}
 
                             {/* Purchase Button */}
                             <button

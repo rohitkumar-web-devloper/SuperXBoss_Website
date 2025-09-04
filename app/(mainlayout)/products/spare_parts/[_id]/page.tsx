@@ -79,7 +79,6 @@ const SparePartsProductsPage = () => {
                                 handleNavigate={() => {
                                     router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
                                 }}
-
                             />
                         ))}
                     </React.Fragment>
