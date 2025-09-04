@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useNoAuthProductBySlugQuery } from '@/services/apis/publicApis/hooks';
+import ProductDetailSkeleton from '@/components/skeletons/ProductDetailSkeleton';
 
 const ProductDetailPage = () => {
     const router = useRouter();
@@ -30,9 +31,7 @@ const ProductDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
+            <ProductDetailSkeleton/>
         );
     }
 
@@ -53,7 +52,7 @@ const ProductDetailPage = () => {
     }
 
     const images = product.images || [];
-    const videos = product.videos || (product.video ? [product.video] : []); // ✅ Support single video
+    const videos = product.videos || (product.video ? [product.video] : []); 
     const hasVideos = videos.length > 0;
 
     return (
@@ -169,14 +168,14 @@ const ProductDetailPage = () => {
                                 </p>
                             )}
 
-                            {/* ✅ Product IDs */}
+                            {/*  Product IDs */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                                 <p><span className="font-medium">Part No:</span> {product.part_no}</p>
                                 <p><span className="font-medium">SKU ID:</span> {product.sku_id}</p>
                                 <p><span className="font-medium">HSN Code:</span> {product.hsn_code}</p>
                             </div>
 
-                            {/* ✅ Price + Unit */}
+                            {/*  Price + Unit */}
                             <div className="space-y-2">
                                 <div className="flex items-center space-x-3">
                                     <span className="text-2xl font-bold text-gray-900">

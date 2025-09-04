@@ -75,10 +75,9 @@ const PopularProductsPage = () => {
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
                                 handleNavigate={() => {
-                                    router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+                                    if (!product.slug) return;
+                                    router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
                                 }}
-
-
                             />
                         ))}
                     </React.Fragment>
