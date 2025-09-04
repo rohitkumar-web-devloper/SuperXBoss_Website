@@ -23,6 +23,7 @@ const Home = () => {
                 subheading="Best spare parts brands for your needs"
                 type="Spare Parts"
                 navigateType="spare-brands"
+                navigateViewProduct="products/spare_parts"
             />
             <TopCategories />
 
@@ -31,6 +32,8 @@ const Home = () => {
                 subheading="Most popular vehicles this week"
                 type="Vehicle"
                 navigateType="vehicle-brands"
+                navigateViewProduct="products/vehicles"
+
             />
 
             <PopularPart />

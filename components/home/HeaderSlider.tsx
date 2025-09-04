@@ -71,8 +71,9 @@ const HeaderSlider = ({ data, isLoading }: any) => {
 
     const handleNavigate = (product: any) => {
         if (!product.slug) return;
-        router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+        router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
     };
+
 
     return (
         <div

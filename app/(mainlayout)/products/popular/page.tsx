@@ -75,9 +75,9 @@ const PopularProductsPage = () => {
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
                                 handleNavigate={() => {
-                                    router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+                                    if (!product.slug) return;
+                                    router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
                                 }}
-
                             />
                         ))}
                     </React.Fragment>
@@ -96,7 +96,7 @@ const PopularProductsPage = () => {
                         Load More
                     </Button>
                 ) : (
-                    <p className="text-gray-500">No more products to load</p>
+                    <p className="text-gray-500 py-10">No more products to load</p>
                 )}
             </div>
         </div>

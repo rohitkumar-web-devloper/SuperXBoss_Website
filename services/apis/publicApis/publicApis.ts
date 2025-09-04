@@ -9,6 +9,9 @@ export interface NoAuthProductsParams {
     search?: string;
     page: number;
     limit: number;
+    brand?: string;  
+    categories?: string;   
+    vehicle_brand?: string; 
 }
 
 export interface NoAuthBrandsParams {

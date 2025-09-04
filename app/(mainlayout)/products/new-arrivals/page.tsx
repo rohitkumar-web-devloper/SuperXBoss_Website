@@ -54,10 +54,7 @@ const NewArrivalsProductsPage = () => {
         return <div className="text-center py-10">Error loading products</div>;
     }
 
-    const handleNavigate = (product: any) => {
-        const query = encodeURIComponent(JSON.stringify(product));
-        router.push(`/products/detail?data=${query}`);
-    };
+
 
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto py-8">
@@ -75,9 +72,9 @@ const NewArrivalsProductsPage = () => {
                                 imageUrl={product.images?.[0] || ''}
                                 isNew={product.new_arrival}
                                 handleNavigate={() => {
-                                    router.push(`/products/detail?slug=${encodeURIComponent(product.slug)}`);
+                                    if (!product.slug) return;
+                                    router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
                                 }}
-
                             />
                         ))}
                     </React.Fragment>
@@ -96,7 +93,7 @@ const NewArrivalsProductsPage = () => {
                         Load More
                     </Button>
                 ) : (
-                    <p className="text-gray-500">No more products to load</p>
+                    <p className="text-gray-500 py-10">No more products to load</p>
                 )}
             </div>
         </div>

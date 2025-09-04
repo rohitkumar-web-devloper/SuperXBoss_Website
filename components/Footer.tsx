@@ -18,16 +18,15 @@ const Footer = () => {
                 {/* Logo and Description */}
                 <div className="w-full md:w-2/5">
                     <Image
-                        className="w-28 md:w-32"
+                        className="cursor-pointer w-36 md:w-44" // ⬅️ Increased size
                         src={logo}
-                        alt="TechShop Logo"
-                        width={128}
-                        height={32}
+                        alt="logo"
+                        width={180}   // ⬅️ Updated width
+                        height={60}   // ⬅️ Updated height
                     />
+
                     <p className="mt-6 text-sm leading-relaxed">
-                        TechShop is your premier destination for cutting-edge technology and electronics.
-                        Since 2010, we've been providing high-quality gadgets, computers, and accessories
-                        to tech enthusiasts and professionals alike.
+                        A heavy commercial vehicle (HCV) parts business supplies spare parts for large trucks and commercial vehicles, focusing on an extensive range of components like engine, brake, and suspension parts to support the logistics, construction, and mining industries. This involves sourcing and distributing genuine, OEM, or aftermarket parts, managing inventory to ensure timely availability, providing expert parts identification and technical support to fleet operators and technicians, and building strong customer relationships within the heavy-duty vehicle sector.
                     </p>
                 </div>
 

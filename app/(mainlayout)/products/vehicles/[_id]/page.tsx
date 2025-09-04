@@ -6,17 +6,19 @@ import { getNoAuthProducts } from '@/services/apis/publicApis/publicApis';
 import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/Button';
 import ProductsSkeleton from '@/components/skeletons/ProductsSkeleton';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 
-const TrendingProductsPage = () => {
+const VehiclesProductsPage = () => {
     const limit = 10;
     const router = useRouter();
+    const { _id } = useParams();
+    console.log(_id);
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
-        queryKey: ['products'],
+        queryKey: ["products", _id],
         queryFn: ({ pageParam = 1 }) =>
             getNoAuthProducts({
-                trend_part: true,
+                brand: _id as string,
                 page: pageParam,
                 limit: limit,
             }),
@@ -54,14 +56,10 @@ const TrendingProductsPage = () => {
         return <div className="text-center py-10">Error loading products</div>;
     }
 
-    const handleNavigate = (product: any) => {
-        const query = encodeURIComponent(JSON.stringify(product));
-        router.push(`/products/detail?data=${query}`);
-    };
 
     return (
         <div className="px-6 xl:px-16 max-w-[1540px] mx-auto py-8">
-            <h1 className="text-xl md:text-2xl font-bold mb-8">Trending Products</h1>
+            <h1 className="text-xl md:text-2xl font-bold mb-8">Vehicles Products</h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {data?.pages?.map((page, i) => (
                     <React.Fragment key={i}>
@@ -78,8 +76,6 @@ const TrendingProductsPage = () => {
                                     if (!product.slug) return;
                                     router.push(`/products/product_detail/${encodeURIComponent(product.slug)}`);
                                 }}
-
-
                             />
                         ))}
                     </React.Fragment>
@@ -105,4 +101,4 @@ const TrendingProductsPage = () => {
     );
 };
 
-export default TrendingProductsPage;
+export default VehiclesProductsPage;
