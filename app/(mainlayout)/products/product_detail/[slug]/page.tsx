@@ -151,16 +151,16 @@ const ProductDetailPage = () => {
 
                             {product.brand && (
                                 <p className="text-gray-600 mt-2 flex text-lg items-center space-x-2">
-                                    Brand:
-                                    <span className="font-medium flex items-center space-x-2">
-                                        {product.brand.name}
+                                    Brand : {}
+                                    <span className="font-medium flex items-center space-x-2 ml-1">
+                                        {" "}{product.brand.name}
                                         {product.brand.logo && (
                                             <Image
                                                 src={product.brand.logo}
                                                 alt={product.brand.name}
-                                                width={60}
-                                                height={60}
-                                                className="object-contain rounded"
+                                                width={40}
+                                                height={40}
+                                                className="object-contain rounded h-10 w-10 ml-3"
                                                 unoptimized
                                             />
                                         )}
@@ -200,6 +200,13 @@ const ProductDetailPage = () => {
                                             product.customer_price - (product.discount_customer_price || 0)
                                         )}{' '}
                                         ({discountPercentage}%)
+                                    </p>
+                                )}
+
+                                {/* Tax Information */}
+                                {product.tax && (
+                                    <p className="text-sm text-gray-500">
+                                        Price includes {product.tax}% GST
                                     </p>
                                 )}
                             </div>

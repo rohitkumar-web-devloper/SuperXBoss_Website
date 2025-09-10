@@ -86,11 +86,6 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Copyright */}
-            <div className="py-6 text-center text-xs md:text-sm text-gray-500">
-                <p>Copyright © {new Date().getFullYear()} TechShop. All Rights Reserved.</p>
-            </div>
         </footer>
     );
 };
