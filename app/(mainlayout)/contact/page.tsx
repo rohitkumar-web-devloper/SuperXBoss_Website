@@ -60,16 +60,6 @@ const ContactUs = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* <div className="mt-8">
-                        <Image
-                            src={contactImage}
-                            alt="Our office"
-                            width={500}
-                            height={300}
-                            className="rounded-lg shadow-sm w-full h-auto"
-                        />
-                    </div> */}
                 </div>
 
                 {/* Contact Form */}
@@ -143,13 +133,21 @@ const ContactUs = () => {
                     Follow us for updates and promotions
                 </p>
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-                    {['Facebook', 'Twitter', 'Instagram', 'LinkedIn'].map((social) => (
-                        <button
-                            key={social}
+                    {[
+                        { name: "Facebook", link: "https://www.facebook.com/profile.php?id=61580076416783" },
+                        { name: "Twitter", link: "https://x.com/SuperxBoss" },
+                        { name: "Instagram", link: "https://www.instagram.com/superxboss24/" },
+                        { name: "LinkedIn", link: "https://www.linkedin.com/in/superx-boss-3ab7b9381" }
+                    ].map((social) => (
+                        <a
+                            key={social.name}
+                            href={social.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="px-4 sm:px-6 py-2 border rounded-full text-gray-700 hover:bg-default hover:text-white transition text-sm sm:text-base"
                         >
-                            {social}
-                        </button>
+                            {social.name}
+                        </a>
                     ))}
                 </div>
             </div>
